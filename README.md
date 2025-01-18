@@ -8,4 +8,10 @@ The code is centered around [Main.java](src/main/java/org/sciborgs1155/dashboard
 - `Dashboard.java` consists of the Dashboard GUI.
 - `Contants.java` consists of constants, which should be updated as necessary.
 
-It *appears* that you **MUST** build with `./gradlew build` before running. Additionally, do **NOT** update the project version!
+It *appears* that you **should** build with `./gradlew build` before running. Additionally, do **NOT** update the project version!
+
+If this doesn't work, try a random combination of:
+- `./gradlew build`
+- `./gradlew clean build`
+- `Restart Java Language Server`
+- `Reopen VSCode`
