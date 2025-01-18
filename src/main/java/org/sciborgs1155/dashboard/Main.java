@@ -6,9 +6,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import java.io.IOException;
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.util.WPIUtilJNI;
+
+import static org.sciborgs1155.dashboard.Constants.*;
+
 public class Main {
     public static void main(String[] args) throws IOException {
         NetworkTablesJNI.Helper.setExtractOnStaticLoad(false);
@@ -19,24 +24,44 @@ public class Main {
         new Main().run();
     }
     public void run() {
+        // start gui
         final Dashboard dashboard = new Dashboard();
 
+        // connect
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        NetworkTable table = inst.getTable("Robot");
-        NetworkTableEntry entry = table.getEntry("speedMultiplier");
         inst.startClient4("Dashboard");
-        // inst.setServer("localhost");
-        inst.setServerTeam(1155,5810);
-        // inst.startDSClient();
+        if (REAL) {
+            inst.setServerTeam(1155,5810);
+            inst.startDSClient();
+        } else {
+            inst.setServer("localhost");
+        }
+
+        NetworkTable table = inst.getTable("Dashboard");
+
+        NetworkTableEntry entryTick = table.getEntry("tick");
+        int tick = 0;
+        NetworkTableEntry entryTarget = table.getEntry("target");
+
         while (true) {
             try {
-              Thread.sleep(1000);
+              Thread.sleep(20);
             } catch (InterruptedException ex) {
                 System.out.println("interrupted");
                 return;
             }
-            entry.setDouble(1);
+
+            for (BooleanSupplier s: dashboard.sides){
+                if (s.getAsBoolean()){
+                    entryTarget.setString("" + sideNames.get(dashboard.sides.indexOf(s)));
+                }
+            }
             
+            
+
+            
+            entryTick.setInteger(tick);
+            tick++;
         }
     }
 }
