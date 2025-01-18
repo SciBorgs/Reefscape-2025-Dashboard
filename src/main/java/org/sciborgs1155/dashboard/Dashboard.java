@@ -20,11 +20,11 @@ public class Dashboard {
   private final JPanel panel;
   private final int xSize = 680;
   private final int ySize = 680;
-  private final Color bgColor = new Color(75, 75, 200);
+  private final Color bgColor = new Color(50, 50, 100);
 
   // Side (A-L)
   public BooleanSupplier SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL;
-  public List<BooleanSupplier> sides;
+  public List<BooleanSupplier> branches;
   
   // Level (1-4)
   // public BooleanSupplier L1, L2, L3, L4;
@@ -49,10 +49,10 @@ public class Dashboard {
       BufferedImage buffer = ImageIO.read(getClass().getResource("images/bg.png"));
       bgImage = new JLabel(new ImageIcon(buffer));
       bgImage.setBounds(
-          (int) Math.round(-0.5 * 630 + xSize / 2 - 12.5),
-          (int) Math.round(-0.5 * 630 + ySize / 2 - 12.5),
-          630,
-          630);
+          (int) Math.round(-0.5 * 474 + xSize / 2 - 12.5),
+          (int) Math.round(-0.5 * 409 + ySize / 2 - 12.5),
+          474,
+          409);
     } catch (Exception e) {
       bgImage = new JLabel(new ImageIcon("1155"));
     }
@@ -62,33 +62,32 @@ public class Dashboard {
     frame.add(panel, BorderLayout.CENTER);
     frame.setVisible(true);
 
-    SA = bindButton("A");
-    SB = bindButton("B");
-    SC = bindButton("C");
-    SD = bindButton("D");
-    SE = bindButton("E");
-    SF = bindButton("F");
-    SG = bindButton("G");
-    SH = bindButton("H");
-    SI = bindButton("I");
-    SJ = bindButton("J");
-    SK = bindButton("K");
-    SL = bindButton("L");
+    SA = bindButton("A", "images/branch.png");
+    SB = bindButton("B", "images/branch.png");
+    SC = bindButton("C", "images/branch.png");
+    SD = bindButton("D", "images/branch.png");
+    SE = bindButton("E", "images/branch.png");
+    SF = bindButton("F", "images/branch.png");
+    SG = bindButton("G", "images/branch.png");
+    SH = bindButton("H", "images/branch.png");
+    SI = bindButton("I", "images/branch.png");
+    SJ = bindButton("J", "images/branch.png");
+    SK = bindButton("K", "images/branch.png");
+    SL = bindButton("L", "images/branch.png");
 
-    sides = List.of(SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL);
+    branches = List.of(SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL);
     // levels = List.of(L1, L2, L3, L4);
 
     frame.revalidate();
     frame.repaint();
   }
 
-  public BooleanSupplier bindButton(String direction) {
-    String path = "images/L" + Math.max(1, Math.min(0, 4)) + ".png";
-    int dir = sideNames.indexOf(direction);
+  public BooleanSupplier bindButton(String direction, String imgPath) {
+    int dir = branchNames.indexOf(direction);
     return bindButton(
-        path,
-        (int) Math.round(Math.cos(Math.PI * dir / 6 - 7 * Math.PI / 12) * 150),
-        (int) -Math.round(Math.sin(Math.PI * dir / 6 - 7 * Math.PI / 12) * 150));
+        imgPath,
+        (int) Math.round(Math.cos(Math.PI * dir / 6 - 7 * Math.PI / 12) * 125),
+        (int) -Math.round(Math.sin(Math.PI * dir / 6 - 7 * Math.PI / 12) * 125));
   }
 
   public BooleanSupplier bindButton(String path, int x, int y) {

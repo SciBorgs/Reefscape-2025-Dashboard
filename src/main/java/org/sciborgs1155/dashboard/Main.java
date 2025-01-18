@@ -51,9 +51,9 @@ public class Main {
                 return;
             }
 
-            for (BooleanSupplier s: dashboard.sides){
+            for (BooleanSupplier s: dashboard.branches){
                 if (s.getAsBoolean()){
-                    entryTarget.setString("" + sideNames.get(dashboard.sides.indexOf(s)));
+                    entryTarget.setString("" + branchNames.get(dashboard.branches.indexOf(s)));
                 }
             }
             
