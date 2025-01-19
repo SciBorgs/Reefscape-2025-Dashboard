@@ -31,6 +31,7 @@ public class Dashboard {
 
   public BooleanSupplier GO, RESET;
 
+  /** The GUI of the operator dashboard. */
   public Dashboard() {
     frame = new JFrame("JFrame");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

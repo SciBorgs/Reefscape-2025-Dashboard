@@ -13,8 +13,13 @@ import edu.wpi.first.util.WPIUtilJNI;
 import java.io.IOException;
 import java.util.function.BooleanSupplier;
 
+/**
+ * An operator dashboard that utilizes NetworkTables to send information to the robot, which can
+ * then be used by the robot as Triggers.
+ */
 public class Main {
   public static void main(String[] args) throws IOException {
+    // setup libraries
     NetworkTablesJNI.Helper.setExtractOnStaticLoad(false);
     WPIUtilJNI.Helper.setExtractOnStaticLoad(false);
     WPIMathJNI.Helper.setExtractOnStaticLoad(false);
@@ -37,6 +42,7 @@ public class Main {
       inst.setServer("localhost");
     }
 
+    // setup network table and entries
     NetworkTable table = inst.getTable("Dashboard");
 
     NetworkTableEntry entryTick = table.getEntry("tick");
@@ -50,6 +56,7 @@ public class Main {
     int selectedLevel = 0;
     entryTargetLevel.setInteger(selectedLevel);
 
+    // loop
     while (true) {
       try {
         Thread.sleep(20);
@@ -57,30 +64,31 @@ public class Main {
         System.out.println("interrupted");
         return;
       }
-
+      // check branches
       for (BooleanSupplier s : dashboard.branches) {
         if (s.getAsBoolean()) {
           selectedBranch = branchNames.get(dashboard.branches.indexOf(s));
         }
       }
+      // check levels
       for (BooleanSupplier s : dashboard.levels) {
         if (s.getAsBoolean()) {
           selectedLevel = dashboard.levels.indexOf(s) + 1;
         }
       }
-
+      // check go button
       if (dashboard.GO.getAsBoolean()) {
         if (selectedBranch != "" && selectedLevel != 0) {
           entryTargetBranch.setString(selectedBranch);
           entryTargetLevel.setInteger(selectedLevel);
         }
       }
-
+      // check reset button
       if (dashboard.RESET.getAsBoolean()) {
         entryTargetBranch.setString("");
         entryTargetLevel.setInteger(0);
       }
-
+      // send tick information
       entryTick.setInteger(tick);
       tick++;
     }
