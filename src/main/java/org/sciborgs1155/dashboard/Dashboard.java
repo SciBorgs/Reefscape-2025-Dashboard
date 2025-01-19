@@ -19,7 +19,7 @@ public class Dashboard {
   private final JPanel panel;
   private final int xSize = 800;
   private final int ySize = 680;
-  private final Color bgColor = new Color(50, 50, 100);
+  private final Color bgColor = new Color(150, 140, 100);
 
   // Side (A-L)
   public BooleanSupplier SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL;
@@ -29,7 +29,7 @@ public class Dashboard {
   public BooleanSupplier L1, L2, L3, L4;
   public List<BooleanSupplier> levels;
 
-  public BooleanSupplier GO, CANCEL;
+  public BooleanSupplier GO, RESET;
 
   public Dashboard() {
     frame = new JFrame("JFrame");
@@ -85,8 +85,8 @@ public class Dashboard {
 
     levels = List.of(L1, L2, L3, L4);
 
-    GO = bindButton("images/test.png", -299, 0);
-    CANCEL = bindButton("images/test.png", -299, 140);
+    GO = bindButton("images/go.png", -299, 0);
+    RESET = bindButton("images/reset.png", -299, 140);
 
     frame.revalidate();
     frame.repaint();

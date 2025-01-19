@@ -76,7 +76,7 @@ public class Main {
         }
       }
 
-      if (dashboard.CANCEL.getAsBoolean()) {
+      if (dashboard.RESET.getAsBoolean()) {
         entryTargetBranch.setString("");
         entryTargetLevel.setInteger(0);
       }
