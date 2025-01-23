@@ -11,8 +11,6 @@ import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
 import java.io.IOException;
-import java.util.function.BooleanSupplier;
-
 import javax.swing.JButton;
 
 /**
