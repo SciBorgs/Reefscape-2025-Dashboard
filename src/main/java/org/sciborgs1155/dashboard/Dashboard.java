@@ -18,7 +18,7 @@ public class Dashboard {
   private final int xSize = 1500;
   private final int ySize = 865;
   private Color bgColor = new Color(0, 131, 174);
-  private JButton goButton, redButton, blueButton;
+  private JButton goButton;
   private JLabel bgImage;
 
   // Side (A-L)
@@ -233,8 +233,6 @@ public class Dashboard {
             .get(3)
             .setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/lb_L4.png"))));
         goButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/goo.png"))));
-        redButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/red.png"))));
-        blueButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/blue.png"))));
         ((JButton) panel.getComponent(panel.getComponentCount() - 4))
             .setIcon(
                 new ImageIcon(
@@ -255,8 +253,6 @@ public class Dashboard {
             .get(3)
             .setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/lr_L4.png"))));
         goButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/rgoo.png"))));
-        redButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/rred.png"))));
-        blueButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/rblue.png"))));
         ((JButton) panel.getComponent(panel.getComponentCount() - 4))
             .setIcon(
                 new ImageIcon(

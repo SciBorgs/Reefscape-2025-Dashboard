@@ -60,7 +60,6 @@ public class Main {
     entryTargetLevel.setInteger(selectedLevel);
 
     NetworkTableEntry entryRobotConencted = table.getEntry("robotConnected");
-    entryRobotConencted.setBoolean(false);
 
     NetworkTableEntry entryBlueAlliance = table.getEntry("blueAlliance");
     entryBlueAlliance.setBoolean(true);
