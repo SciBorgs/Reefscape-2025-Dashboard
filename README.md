@@ -10,10 +10,16 @@ The code is centered around [Main.java](src/main/java/org/sciborgs1155/dashboard
 - `Dashboard.java` consists of the Dashboard GUI.
 - `Constants.java` consists of constants, which should be updated as necessary. `REAL` should be set
 
-It *appears* that you **should** build with `./gradlew build` before running. Additionally, do **NOT** update the project version!
+## Setup
+
+Setup is *extremely* weird, so be prepared to try many things. With that said, it *appears* that you **should** build with `./gradlew build` before running. More importantly, do **NOT** update the project version!
 
 If this doesn't work, try a random combination of:
 - `./gradlew build`
 - `./gradlew clean build`
 - `Restart Java Language Server`
 - `Reopen VSCode`
+- Remove `"ntcorejni"` from `CombinedRuntimeLoader.loadLibraries(Main.class, "wpiutiljni", "wpimathjni", "ntcorejni");`, run it, and add it back.
+- Comment out the library setup code, run it, then uncomment it.
+
+If this still doesn't work, put on your thinking caps and get creative. Every setup process on every computer appears to be different, so best of luck!
