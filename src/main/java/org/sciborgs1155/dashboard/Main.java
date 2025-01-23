@@ -13,6 +13,8 @@ import edu.wpi.first.util.WPIUtilJNI;
 import java.io.IOException;
 import java.util.function.BooleanSupplier;
 
+import javax.swing.JButton;
+
 /**
  * An operator dashboard that utilizes NetworkTables to send information to the robot, which can
  * then be used by the robot as Triggers.
@@ -68,29 +70,29 @@ public class Main {
         return;
       }
       // check branches
-      for (BooleanSupplier s : dashboard.branches) {
-        if (s.getAsBoolean()) {
+      for (JButton s : dashboard.branches) {
+        if (s.getModel().isPressed()) {
           selectedBranch = branchNames.get(dashboard.branches.indexOf(s));
         }
       }
       // check levels
-      for (BooleanSupplier s : dashboard.levels) {
-        if (s.getAsBoolean()) {
+      for (JButton s : dashboard.levels) {
+        if (s.getModel().isPressed()) {
           selectedLevel = dashboard.levels.indexOf(s) + 1;
         }
       }
-      if (dashboard.processor.getAsBoolean()) {
+      if (dashboard.processor.getModel().isPressed()) {
         selectedProcessor = true;
       }
       // check go button
-      if (dashboard.GO.getAsBoolean()) {
+      if (dashboard.GO.getModel().isPressed()) {
         if (selectedBranch != "" && selectedLevel != 0) {
           entryTargetBranch.setString(selectedBranch);
           entryTargetLevel.setInteger(selectedLevel);
         }
       }
       // check reset button
-      if (dashboard.RESET) {
+      if (dashboard.RESET.getModel().isPressed()) {
         entryTargetBranch.setString("");
         entryTargetLevel.setInteger(0);
       }

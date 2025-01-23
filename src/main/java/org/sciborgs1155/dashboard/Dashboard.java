@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -25,19 +24,19 @@ public class Dashboard {
   private JLabel bgImage;
 
   // Side (A-L)
-  public BooleanSupplier SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL;
-  public List<BooleanSupplier> branches;
+  public JButton SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL;
+  public List<JButton> branches;
 
   // Level (1-4)
-  public BooleanSupplier L1, L2, L3, L4;
+  public JButton L1, L2, L3, L4;
   public List<JButton> levelsButtons;
-  public List<BooleanSupplier> levels;
+  public List<JButton> levels;
 
   private JButton processorButton;
-  public BooleanSupplier processor;
+  public JButton processor;
 
-  public Boolean RESET, RED, BLUE;
-  public BooleanSupplier GO;
+  public JButton RESET, RED, BLUE;
+  public JButton GO;
 
   public JLabel displayLabel;
 
@@ -97,7 +96,7 @@ public class Dashboard {
     SL = bindButtonWithBranch("L", "images/Lp.png", 411,573,124, 152);
 
     branches = List.of(SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL);
-    processor = bindButton1("images/Pg.png", 1309, 6, 147, 185);
+    processor = bindButton("images/Pg.png", 1309, 6, 147, 185);
     processorButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
     processorButton.addActionListener(e -> {
       if (processorButton.isSelected()) {
@@ -115,13 +114,13 @@ public class Dashboard {
       }
     });
 
-    L1 = bindButton1("images/l1.png", 1333, 532, 103, 99);
+    L1 = bindButton("images/l1.png", 1333, 532, 103, 99);
     JButton l1Button = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    L2 = bindButton1("images/L2.png", 1333, 428, 103, 99);
+    L2 = bindButton("images/L2.png", 1333, 428, 103, 99);
     JButton l2Button = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    L3 = bindButton1("images/L3.png", 1333, 322, 103, 99);
+    L3 = bindButton("images/L3.png", 1333, 322, 103, 99);
     JButton l3Button = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    L4 = bindButton1("images/L4.png", 1333, 219, 103, 99);
+    L4 = bindButton("images/L4.png", 1333, 219, 103, 99);
     JButton l4Button = (JButton) panel.getComponent(panel.getComponentCount() - 1);
     levels = List.of(L1, L2, L3, L4);
 
@@ -135,7 +134,7 @@ public class Dashboard {
         goButton.setEnabled(!selectedBranch.isEmpty() && !selectedLevel.isEmpty());}
     ));
     
-    GO = bindButton1("images/goo.png", 1333, 660, 100, 99);
+    GO = bindButton("images/goo.png", 1333, 660, 100, 99);
     goButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
     goButton.setEnabled(false);
     goButton.setBorderPainted(false);
@@ -182,8 +181,8 @@ public class Dashboard {
   //   }
   // }
 
-  public BooleanSupplier bindButtonWithBranch(String branch, String imgPath, int x, int y, int w, int h) {
-    BooleanSupplier buttonB = bindButton1(imgPath, x, y, w, h);
+  public JButton bindButtonWithBranch(String branch, String imgPath, int x, int y, int w, int h) {
+    JButton buttonB = bindButton(imgPath, x, y, w, h);
     // Enable level buttons when any branch button is pressed
     JButton button = (JButton) panel.getComponent(panel.getComponentCount() - 1);
     button.addActionListener(e -> {
@@ -204,7 +203,7 @@ public class Dashboard {
     return buttonB;
   }
 
-  public Boolean bindButton(String path, int x, int y, int w, int h) {
+  public JButton bindButton(String path, int x, int y, int w, int h) {
     try {
       BufferedImage buffer = ImageIO.read(getClass().getResource(path));
       JButton button = new JButton(new ImageIcon(buffer));
@@ -215,32 +214,12 @@ public class Dashboard {
           h);
       button.setOpaque(true);
       panel.add(button);
-      return button.getModel().isPressed();
+      return button;
     } catch (Exception e) {
       JButton button = new JButton(path);
       button.setOpaque(true);
       panel.add(button);
-      return button.getModel().isPressed();
-    }
-  }
-
-  public BooleanSupplier bindButton1(String path, int x, int y, int w, int h) {
-    try {
-      BufferedImage buffer = ImageIO.read(getClass().getResource(path));
-      JButton button = new JButton(new ImageIcon(buffer));
-      button.setBounds(
-          x,
-          y,
-          w,
-          h);
-      button.setOpaque(true);
-      panel.add(button);
-      return () -> button.getModel().isPressed();
-    } catch (Exception e) {
-      JButton button = new JButton(path);
-      button.setOpaque(true);
-      panel.add(button);
-      return () -> button.getModel().isPressed();
+      return button;
     }
   }
   
