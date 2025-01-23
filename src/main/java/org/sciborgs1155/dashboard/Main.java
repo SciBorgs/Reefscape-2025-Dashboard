@@ -10,10 +10,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
+
+import java.awt.Color;
+import java.awt.Robot;
 import java.io.IOException;
-import java.util.function.BooleanSupplier;
 
 import javax.swing.JButton;
+import javax.swing.border.LineBorder;
 
 /**
  * An operator dashboard that utilizes NetworkTables to send information to the robot, which can
@@ -61,6 +64,8 @@ public class Main {
     Boolean selectedProcessor = false;
     entryProcessor.setBoolean(selectedProcessor);
 
+    NetworkTableEntry closestBranch = table.getEntry("closestBranch");
+
     // loop
     while (true) {
       try {
@@ -75,6 +80,16 @@ public class Main {
           selectedBranch = branchNames.get(dashboard.branches.indexOf(s));
         }
       }
+
+      for (String name : branchNames) {
+        JButton button = dashboard.branches.get(name.toLowerCase().charAt(0) - 'a');
+        if (name.equalsIgnoreCase(closestBranch.getString(""))) {
+          button.setBorder(new LineBorder(Color.YELLOW, 5));
+        } else {
+          button.setBorder(new LineBorder(Color.YELLOW, 0));
+        }
+      }
+
       // check levels
       for (JButton s : dashboard.levels) {
         if (s.getModel().isPressed()) {
