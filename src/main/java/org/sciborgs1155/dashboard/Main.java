@@ -55,6 +55,9 @@ public class Main {
     NetworkTableEntry entryTargetLevel = table.getEntry("level");
     int selectedLevel = 0;
     entryTargetLevel.setInteger(selectedLevel);
+    NetworkTableEntry entryProcessor = table.getEntry("processor");
+    Boolean selectedProcessor = false;
+    entryProcessor.setBoolean(selectedProcessor);
 
     // loop
     while (true) {
@@ -76,6 +79,9 @@ public class Main {
           selectedLevel = dashboard.levels.indexOf(s) + 1;
         }
       }
+      if (dashboard.processor.getAsBoolean()) {
+        selectedProcessor = true;
+      }
       // check go button
       if (dashboard.GO.getAsBoolean()) {
         if (selectedBranch != "" && selectedLevel != 0) {
@@ -84,10 +90,11 @@ public class Main {
         }
       }
       // check reset button
-      if (dashboard.RESET.getAsBoolean()) {
+      if (dashboard.RESET) {
         entryTargetBranch.setString("");
         entryTargetLevel.setInteger(0);
       }
+
       // send tick information
       entryTick.setInteger(tick);
       tick++;
