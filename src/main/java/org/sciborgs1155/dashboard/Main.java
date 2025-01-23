@@ -14,7 +14,6 @@ import edu.wpi.first.util.WPIUtilJNI;
 import java.awt.Color;
 import java.awt.Robot;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
