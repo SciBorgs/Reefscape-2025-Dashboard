@@ -90,7 +90,7 @@ public class Dashboard {
     SL = bindButtonWithBranch("L", "images/br_Lp.png", 411, 573, 124, 152);
 
     branches = List.of(SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL);
-    processor = bindButton("images/Pg.png", 1309, 6, 147, 185);
+    processor = bindButton("images/processor.png", 1309, 6, 147, 185);
     processorButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
     processorButton.addActionListener(
         e -> {
@@ -149,25 +149,11 @@ public class Dashboard {
           levelsButtons.forEach(levelButton -> levelButton.setEnabled(true));
         });
 
-    RESET = bindButton("images/rst.png", 16, 513, 100, 100);
+    RESET = bindButton("images/reset_b.png", 16, 513, 100, 100);
     JButton resetButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
     resetButton.setBorderPainted(false);
 
-    RED = bindButton("images/red.png", 16, 390, 100, 100);
-    redButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    redButton.addActionListener(
-        e -> {
-          changeBackground("images/bg_red.png", redButton);
-        });
-    redButton.setBorderPainted(false);
-
-    BLUE = bindButton("images/blue.png", 16, 272, 100, 100);
-    blueButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    blueButton.addActionListener(
-        e -> {
-          changeBackground("images/bg_blue.png", blueButton);
-        });
-    blueButton.setBorderPainted(false);
+    changeBackground("images/bg_blue.png");
 
     panel.setVisible(true);
     panel.add(bgImage);
@@ -227,7 +213,7 @@ public class Dashboard {
     }
   }
 
-  private void changeBackground(String imgPath, JButton button) {
+  public void changeBackground(String imgPath) {
     try {
       BufferedImage buffer = ImageIO.read(getClass().getResource(imgPath));
       bgImage.setIcon(new ImageIcon(buffer));
@@ -252,7 +238,7 @@ public class Dashboard {
         ((JButton) panel.getComponent(panel.getComponentCount() - 4))
             .setIcon(
                 new ImageIcon(
-                    ImageIO.read(getClass().getResource("images/rst.png")))); // Reset button
+                    ImageIO.read(getClass().getResource("images/reset_b.png")))); // Reset button
       } else if (imgPath.contains("bg_red")) {
         bgColor = new Color(197, 45, 60); // Red background
         displayLabel.setForeground(bgColor);
@@ -274,7 +260,10 @@ public class Dashboard {
         ((JButton) panel.getComponent(panel.getComponentCount() - 4))
             .setIcon(
                 new ImageIcon(
-                    ImageIO.read(getClass().getResource("images/r_reset.png")))); // Reset button
+                    ImageIO.read(getClass().getResource("images/reset_r.png")))); // Reset button
+      } else if (imgPath.contains("bg_disconnected")) {
+        bgColor = new Color(50, 50, 50);
+        displayLabel.setForeground(bgColor);
       }
       panel.setBackground(bgColor);
     } catch (Exception e) {

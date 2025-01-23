@@ -10,9 +10,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
-
 import java.awt.Color;
-import java.awt.Robot;
 import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
@@ -56,10 +54,18 @@ public class Main {
     NetworkTableEntry entryTargetBranch = table.getEntry("branch");
     String selectedBranch = "";
     entryTargetBranch.setString(selectedBranch);
+
     NetworkTableEntry entryTargetLevel = table.getEntry("level");
     int selectedLevel = 0;
     entryTargetLevel.setInteger(selectedLevel);
-    NetworkTableEntry entryProcessor = table.getEntry("processor");
+
+    NetworkTableEntry entryRobotConencted = table.getEntry("robotConnected");
+    entryRobotConencted.setBoolean(false);
+
+    NetworkTableEntry entryBlueAlliance = table.getEntry("blueAlliance");
+    entryBlueAlliance.setBoolean(true);
+    
+    NetworkTableEntry entryProcessor = table.getEntry("processor"); // what does this do? (nothing connected to it)
     Boolean selectedProcessor = false;
     entryProcessor.setBoolean(selectedProcessor);
 
@@ -109,6 +115,16 @@ public class Main {
       if (dashboard.RESET.getModel().isPressed()) {
         entryTargetBranch.setString("");
         entryTargetLevel.setInteger(0);
+      }
+
+      if (entryRobotConencted.getBoolean(false)){
+        if (entryBlueAlliance.getBoolean(true)){
+          dashboard.changeBackground("images/bg_blue.png");
+        } else {
+          dashboard.changeBackground("images/bg_red.png");
+        }
+      } else {
+        dashboard.changeBackground("images/bg_disconnected.png");
       }
 
       // send tick information
