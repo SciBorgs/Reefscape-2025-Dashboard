@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -37,7 +38,7 @@ public class Dashboard {
   public JButton GO;
 
   public JLabel displayLabel;
-  public JLabel stimulation;
+  private List<JLabel> stimulations = new ArrayList<>();
 
   private String selectedBranch;
   private String selectedLevel;
@@ -64,19 +65,11 @@ public class Dashboard {
     displayLabel.setFont(new Font("Arial", Font.BOLD, 65));
     panel.add(displayLabel);
 
-    stimulation = new JLabel(" ");
-    try {
-      URL url = new URL("");
-      Icon icon = new ImageIcon(url);
-      stimulation.setIcon(icon);
-      stimulation.setBounds(10, 10, 136, 240);
-      stimulation.setOpaque(true);
-      stimulation.setBackground(Color.BLACK);
-      stimulation.setForeground(bgColor);
-      panel.add(stimulation);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    generateStimulation(175, 10);
+    generateStimulation(1150, 10);
+    generateStimulation(175, 615);
+    generateStimulation(1150, 615);
+    generateStimulation(670, 300);
 
     selectedBranch = "";
     selectedLevel = "";
@@ -293,12 +286,34 @@ public class Dashboard {
     }
   }
 
+  /** Generates a stimulation label. */
+  private void generateStimulation(int x, int y) {
+    JLabel stimulation = new JLabel(" ");
+    try {
+      URL url = Dashboard.class.getResource("images/subway guy.gif");
+      Icon icon = new ImageIcon(url);
+      stimulation.setIcon(icon);
+      stimulation.setBounds(x, y, 136, 240);
+      stimulation.setOpaque(true);
+      stimulation.setBackground(Color.BLACK);
+      stimulation.setForeground(bgColor);
+      stimulations.add(stimulation);
+      panel.add(stimulation);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Sets the stimulation of the operator. Use wisely.
    *
    * @param stimulation Whether or not to stimulate the operator.
    */
-  public void stimulateOperator(boolean stimulation) {}
+  public void stimulateOperator(boolean stimulation) {
+    for (JLabel s : stimulations) {
+      s.setVisible(stimulation);
+    }
+  }
 
   public void close() {
     frame.dispose();
