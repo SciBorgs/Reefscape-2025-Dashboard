@@ -18,7 +18,6 @@ public class Dashboard {
   private final int xSize = 1500;
   private final int ySize = 865;
   private Color bgColor = new Color(0, 131, 174);
-  private JButton goButton;
   private JLabel bgImage;
 
   // Side (A-L)
@@ -29,11 +28,10 @@ public class Dashboard {
   public JButton L1, L2, L3, L4;
   public List<JButton> levelsButtons;
   public List<JButton> levels;
+  public List<JButton> otherButtons;
 
-  private JButton processorButton;
   public JButton processor;
-
-  public JButton RESET, RED, BLUE;
+  public JButton RESET;
   public JButton GO;
 
   public JLabel displayLabel;
@@ -91,17 +89,16 @@ public class Dashboard {
 
     branches = List.of(SA, SB, SC, SD, SE, SF, SG, SH, SI, SJ, SK, SL);
     processor = bindButton("images/processor.png", 1309, 6, 147, 185);
-    processorButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    processorButton.addActionListener(
+    processor.addActionListener(
         e -> {
-          if (processorButton.isSelected()) {
-            processorButton.setSelected(false);
-            goButton.setEnabled(false);
+          if (processor.isSelected()) {
+            processor.setSelected(false);
+            GO.setEnabled(false);
             displayLabel.setText("");
             levelsButtons.forEach(levelButton -> levelButton.setEnabled(true));
           } else {
-            processorButton.setSelected(true);
-            goButton.setEnabled(true);
+            processor.setSelected(true);
+            GO.setEnabled(true);
             displayLabel.setHorizontalAlignment(JLabel.CENTER);
             displayLabel.setFont(new Font("Arial", Font.BOLD, 38));
             displayLabel.setText("PCSR" + selectedBranch + selectedLevel);
@@ -132,27 +129,26 @@ public class Dashboard {
                   selectedLevel = " " + (levelsButtons.indexOf(levelButton) + 1);
                   displayLabel.setHorizontalAlignment(JLabel.CENTER);
                   displayLabel.setText(selectedBranch + selectedLevel);
-                  goButton.setEnabled(!selectedBranch.isEmpty() && !selectedLevel.isEmpty());
+                  GO.setEnabled(!selectedBranch.isEmpty() && !selectedLevel.isEmpty());
                 }));
 
     GO = bindButton("images/goo.png", 1333, 660, 100, 99);
-    goButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    goButton.setEnabled(false);
-    goButton.setBorderPainted(false);
-    goButton.addActionListener(
+    GO.setEnabled(false);
+    GO.setBorderPainted(false);
+    GO.addActionListener(
         e -> {
-          goButton.setEnabled(false);
+          GO.setEnabled(false);
           selectedBranch = "";
           selectedLevel = "";
           displayLabel.setText(selectedBranch + selectedLevel);
-          processorButton.setEnabled(true);
+          processor.setEnabled(true);
           levelsButtons.forEach(levelButton -> levelButton.setEnabled(true));
         });
 
     RESET = bindButton("images/reset_b.png", 16, 513, 100, 100);
-    JButton resetButton = (JButton) panel.getComponent(panel.getComponentCount() - 1);
-    resetButton.setBorderPainted(false);
+    RESET.setBorderPainted(false);
 
+    otherButtons = List.of(processor, RESET, GO);
     changeBackground("images/bg_blue.png");
 
     panel.setVisible(true);
@@ -191,12 +187,22 @@ public class Dashboard {
           }
           displayLabel.setHorizontalAlignment(JLabel.CENTER);
           displayLabel.setText(selectedBranch + " " + selectedLevel);
-          goButton.setEnabled(!selectedBranch.isEmpty() && !selectedLevel.isEmpty());
-          processorButton.setEnabled(selectedBranch.isEmpty());
+          GO.setEnabled(!selectedBranch.isEmpty() && !selectedLevel.isEmpty());
+          processor.setEnabled(selectedBranch.isEmpty());
         });
     return buttonB;
   }
 
+  /**
+   * Creates a JButton and adds it to the panel.
+   *
+   * @param path The path of the image
+   * @param x The x position on the panel
+   * @param y The y position on the panel
+   * @param w The width of the JButton
+   * @param h The heigh of the JButton
+   * @return The JButton
+   */
   public JButton bindButton(String path, int x, int y, int w, int h) {
     try {
       BufferedImage buffer = ImageIO.read(getClass().getResource(path));
@@ -213,6 +219,11 @@ public class Dashboard {
     }
   }
 
+  /**
+   * Changes the background. Supports "bg_blue", "bg_red", and "bg_disconnected".
+   *
+   * @param imgPath
+   */
   public void changeBackground(String imgPath) {
     try {
       BufferedImage buffer = ImageIO.read(getClass().getResource(imgPath));
@@ -232,8 +243,8 @@ public class Dashboard {
         levelsButtons
             .get(3)
             .setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/lb_L4.png"))));
-        goButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/goo.png"))));
-        ((JButton) panel.getComponent(panel.getComponentCount() - 4))
+        GO.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/goo.png"))));
+        RESET
             .setIcon(
                 new ImageIcon(
                     ImageIO.read(getClass().getResource("images/reset_b.png")))); // Reset button
@@ -252,8 +263,8 @@ public class Dashboard {
         levelsButtons
             .get(3)
             .setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/lr_L4.png"))));
-        goButton.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/rgoo.png"))));
-        ((JButton) panel.getComponent(panel.getComponentCount() - 4))
+        GO.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/rgoo.png"))));
+        RESET
             .setIcon(
                 new ImageIcon(
                     ImageIO.read(getClass().getResource("images/reset_r.png")))); // Reset button

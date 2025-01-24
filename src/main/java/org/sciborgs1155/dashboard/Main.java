@@ -63,8 +63,9 @@ public class Main {
 
     NetworkTableEntry entryBlueAlliance = table.getEntry("blueAlliance");
     entryBlueAlliance.setBoolean(true);
-    
-    NetworkTableEntry entryProcessor = table.getEntry("processor"); // what does this do? (nothing connected to it)
+
+    // what does this do? (nothing connected to it)
+    NetworkTableEntry entryProcessor = table.getEntry("processor");
     Boolean selectedProcessor = false;
     entryProcessor.setBoolean(selectedProcessor);
 
@@ -79,18 +80,17 @@ public class Main {
         return;
       }
       // check branches
-      for (JButton s : dashboard.branches) {
-        if (s.getModel().isPressed()) {
-          selectedBranch = branchNames.get(dashboard.branches.indexOf(s));
+      for (JButton b : dashboard.branches) {
+        if (b.getModel().isPressed()) {
+          selectedBranch = branchNames.get(dashboard.branches.indexOf(b));
         }
       }
 
-      for (String name : branchNames) {
-        JButton button = dashboard.branches.get(name.toLowerCase().charAt(0) - 'a');
-        if (name.equalsIgnoreCase(closestBranch.getString(""))) {
-          button.setBorder(new LineBorder(Color.YELLOW, 5));
+      for (JButton b : dashboard.branches) {
+        if (closestBranch.getString("").equals(branchNames.get(dashboard.branches.indexOf(b)))) {
+          b.setBorder(new LineBorder(Color.YELLOW, 5));
         } else {
-          button.setBorder(new LineBorder(Color.YELLOW, 0));
+          b.setBorder(new LineBorder(Color.YELLOW, 0));
         }
       }
 
@@ -116,8 +116,8 @@ public class Main {
         entryTargetLevel.setInteger(0);
       }
 
-      if (entryRobotConencted.getBoolean(false)){
-        if (entryBlueAlliance.getBoolean(true)){
+      if (entryRobotConencted.getBoolean(false)) {
+        if (entryBlueAlliance.getBoolean(true)) {
           dashboard.changeBackground("images/bg_blue.png");
         } else {
           dashboard.changeBackground("images/bg_red.png");
