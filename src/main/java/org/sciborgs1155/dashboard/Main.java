@@ -116,7 +116,9 @@ public class Main {
         entryTargetLevel.setInteger(0);
       }
 
+      // change background
       if (entryRobotConencted.getBoolean(false)) {
+        dashboard.stimulateOperator(false);
         if (entryBlueAlliance.getBoolean(true)) {
           dashboard.changeBackground("images/bg_blue.png");
         } else {
@@ -124,6 +126,7 @@ public class Main {
         }
       } else {
         dashboard.changeBackground("images/bg_disconnected.png");
+        dashboard.stimulateOperator(true);
       }
 
       // send tick information

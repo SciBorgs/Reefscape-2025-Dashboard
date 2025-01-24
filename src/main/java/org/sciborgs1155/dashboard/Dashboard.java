@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,6 +38,7 @@ public class Dashboard {
   public JButton GO;
 
   public JLabel displayLabel;
+  private List<JLabel> stimulations = new ArrayList<>();
 
   private String selectedBranch;
   private String selectedLevel;
@@ -60,6 +64,12 @@ public class Dashboard {
     displayLabel.setForeground(bgColor);
     displayLabel.setFont(new Font("Arial", Font.BOLD, 65));
     panel.add(displayLabel);
+
+    generateStimulation(175, 10);
+    generateStimulation(1150, 10);
+    generateStimulation(175, 615);
+    generateStimulation(1150, 615);
+    generateStimulation(670, 300);
 
     selectedBranch = "";
     selectedLevel = "";
@@ -244,10 +254,9 @@ public class Dashboard {
             .get(3)
             .setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/lb_L4.png"))));
         GO.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/goo.png"))));
-        RESET
-            .setIcon(
-                new ImageIcon(
-                    ImageIO.read(getClass().getResource("images/reset_b.png")))); // Reset button
+        RESET.setIcon(
+            new ImageIcon(
+                ImageIO.read(getClass().getResource("images/reset_b.png")))); // Reset button
       } else if (imgPath.contains("bg_red")) {
         bgColor = new Color(197, 45, 60); // Red background
         displayLabel.setForeground(bgColor);
@@ -264,10 +273,9 @@ public class Dashboard {
             .get(3)
             .setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/lr_L4.png"))));
         GO.setIcon(new ImageIcon(ImageIO.read(getClass().getResource("images/rgoo.png"))));
-        RESET
-            .setIcon(
-                new ImageIcon(
-                    ImageIO.read(getClass().getResource("images/reset_r.png")))); // Reset button
+        RESET.setIcon(
+            new ImageIcon(
+                ImageIO.read(getClass().getResource("images/reset_r.png")))); // Reset button
       } else if (imgPath.contains("bg_disconnected")) {
         bgColor = new Color(50, 50, 50);
         displayLabel.setForeground(bgColor);
@@ -275,6 +283,35 @@ public class Dashboard {
       panel.setBackground(bgColor);
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  /** Generates a stimulation label. */
+  private void generateStimulation(int x, int y) {
+    JLabel stimulation = new JLabel(" ");
+    try {
+      URL url = Dashboard.class.getResource("images/subway guy.gif");
+      Icon icon = new ImageIcon(url);
+      stimulation.setIcon(icon);
+      stimulation.setBounds(x, y, 136, 240);
+      stimulation.setOpaque(true);
+      stimulation.setBackground(Color.BLACK);
+      stimulation.setForeground(bgColor);
+      stimulations.add(stimulation);
+      panel.add(stimulation);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Sets the stimulation of the operator. Use wisely.
+   *
+   * @param stimulation Whether or not to stimulate the operator.
+   */
+  public void stimulateOperator(boolean stimulation) {
+    for (JLabel s : stimulations) {
+      s.setVisible(stimulation);
     }
   }
 
