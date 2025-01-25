@@ -3,7 +3,7 @@ package org.sciborgs1155.dashboard;
 import static org.sciborgs1155.dashboard.Constants.*;
 
 import edu.wpi.first.cscore.CameraServerJNI;
-import edu.wpi.first.math.jni.*;
+import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
