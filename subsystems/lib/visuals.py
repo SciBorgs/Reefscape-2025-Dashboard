@@ -218,11 +218,11 @@ class BranchButtonVisualObject(VisualObject):
         self.type = "branch button"
         self.name = name
         self.lastInteraction = time.time()
-        self.img = generateBorderBox((69,69), 3, (255,0,0,255))
-        placeOver(self.img, displayText(str(branch), "l", bold = True), (75/2-2, 75/2-5), True)
-        self.img2 = generateBorderBox((69,69), 3, (0,0,255,255))
-        placeOver(self.img2, displayText(str(branch), "l", bold = True), (75/2-2, 75/2-5), True)
-        self.positionO = RectangularPositionalBox((self.img.width,self.img.height), pos[0], pos[1])
+        self.img = generateBorderBox((94,94), 3, (255,0,0,255))
+        placeOver(self.img, displayText(str(branch), "l", bold = True), (50, 50), True)
+        self.img2 = generateBorderBox((94,94), 3, (0,0,255,255))
+        placeOver(self.img2, displayText(str(branch), "l", bold = True), (50, 50), True)
+        self.positionO = RectangularPositionalBox((self.img.width,self.img.height), pos[0] - 50, pos[1] - 50)
     def tick(self, img, visualactive, active):
         if active: self.lastInteraction = time.time()
         placeOver(img, self.img2 if active else self.img, self.positionO.getPosition(), False)

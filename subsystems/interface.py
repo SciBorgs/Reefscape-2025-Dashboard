@@ -35,8 +35,16 @@ class Interface:
 
             # Example Usage
             -99 : ["a", ButtonVisualObject("example", (145,165), TEST_IMAGE, TEST_IMAGE)],
-            -98 : ["a", BranchButtonVisualObject("test", (200,200), "A")]
         }
+
+        for i in range(12):
+            id = "ABCDEFGHIJKL"[i]
+            self.ivos[i] = ["a", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
+
+        for i in range(1,5):
+            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1391, (3-i-0.5)*(110)+865/2),"L" + str(i))]
+
+
         '''Control'''
         self.interacting = -999
         self.previousInteracting = -999
