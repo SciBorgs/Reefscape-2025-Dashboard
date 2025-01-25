@@ -9,6 +9,7 @@ from subsystems.lib.fancy import *
 from subsystems.lib.simplefancy import *
 from subsystems.lib.visuals import *
 from subsystems.lib.counter import Counter
+from subsystems.comms import *
 
 class Interface:
     def __init__(self):
@@ -21,6 +22,7 @@ class Interface:
         self.fps = 0
         self.ticks = 0
         self.c = Counter()
+        self.comms = Comms()
         '''Interactable Visual Objects'''
         '''
         Code:
@@ -34,7 +36,7 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # Example Usage
-            -99 : ["a", ButtonVisualObject("example", (145,165), TEST_IMAGE, TEST_IMAGE)],
+            -50 : ["a", BranchButtonVisualObject("go", (100, 865/2), "GO")],
         }
 
         for i in range(12):
@@ -56,6 +58,9 @@ class Interface:
         '''Sliders'''
         self.sliders = []
         self.slidersData = []
+        '''DASHBOARD STUFF'''
+        self.selectedBranch = ""
+        self.selectedLevel = 0
         pass
 
     def tick(self,mx,my,mPressed,fps,keyQueue,mouseScroll):
@@ -106,6 +111,19 @@ class Interface:
                     self.ivos[self.interacting][1].updateText(self.stringKeyQueue)
                 else:
                     self.ivos[self.previousInteracting][1].updateText(self.stringKeyQueue)
+
+        '''DASHBOARD THINGS'''
+        if 0 <= self.interacting <= 11:
+            self.selectedBranch = "ABCDEFGHIJKL"[self.interacting]
+        elif 51 <= self.interacting <= 54:
+            self.selectedLevel = self.interacting - 50
+        elif self.interacting == -50:
+            if self.selectedBranch != "" and self.selectedLevel != 0:
+                self.comms.setBranch(self.selectedBranch)
+                self.comms.setLevel(self.selectedLevel)
+        else: pass
+
+
 
     def processNone(self, im):
         img = im.copy()

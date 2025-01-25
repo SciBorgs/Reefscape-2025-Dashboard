@@ -52,5 +52,11 @@ class Comms:
         time.sleep(0.02)
         self.tick.setInteger(value=self.tick.getInteger(defaultValue=0) + 1)
         
+    def setBranch(self, branch:str) -> None:
+        self.targetBranch.setString(branch)
+
+    def setLevel(self, level:int) -> None:
+        self.targetLevel.setInteger(level)
+        
         
     
