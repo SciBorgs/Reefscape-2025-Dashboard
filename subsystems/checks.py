@@ -3,7 +3,7 @@
 '''Test import all major modules'''
 from PIL import Image, ImageTk, ImageDraw
 import tkinter as tk
-import os, numpy, uuid, ast, time, math
+import os, numpy, time, math, robotpy
 from settings import *
 
 '''Test import all subsystems'''
