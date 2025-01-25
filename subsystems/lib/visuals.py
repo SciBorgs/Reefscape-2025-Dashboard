@@ -105,7 +105,7 @@ class ButtonVisualObject(VisualObject):
         pass
     
 class DummyVisualObject(VisualObject):
-    '''I sit around doing nothing and can store data. A little better that one group member in randomly assigned class projects. That person didn't deserve that 100, did they now? (joke)'''
+    '''I sit around doing nothing and can store data.'''
     def __init__(self, name, pos:tuple|list, data = None):
         self.type = "dummy"
         self.name = name
@@ -209,5 +209,22 @@ class TextButtonPushVisualObject(VisualObject):
         else: self.lastPressed += 1
         self.state = (self.time > self.lastPressed)
         placeOver(img, self.img2 if self.state else self.img, self.positionO.getPosition(), False)
+    def updatePos(self, rmx, rmy):
+        pass
+
+class BranchButtonVisualObject(VisualObject):
+    '''A custom button for branches.'''
+    def __init__(self, name, pos:tuple|list, branch):
+        self.type = "branch button"
+        self.name = name
+        self.lastInteraction = time.time()
+        self.img = generateBorderBox((69,69), 3, (255,0,0,255))
+        placeOver(self.img, displayText(str(branch), "l", bold = True), (75/2-2, 75/2-5), True)
+        self.img2 = generateBorderBox((69,69), 3, (0,0,255,255))
+        placeOver(self.img2, displayText(str(branch), "l", bold = True), (75/2-2, 75/2-5), True)
+        self.positionO = RectangularPositionalBox((self.img.width,self.img.height), pos[0], pos[1])
+    def tick(self, img, visualactive, active):
+        if active: self.lastInteraction = time.time()
+        placeOver(img, self.img2 if active else self.img, self.positionO.getPosition(), False)
     def updatePos(self, rmx, rmy):
         pass

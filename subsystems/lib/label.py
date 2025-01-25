@@ -3,7 +3,7 @@ import tkinter as tk
 import numpy
 from PIL import Image, ImageTk
 from subsystems.lib.simplefancy import generateColorBox
-from settings import TEST_IMAGE, hexColorToRGBA
+from settings import *
 from subsystems.lib.render import *
 
 class LabelWrapper:
@@ -16,20 +16,14 @@ class LabelWrapper:
         self.position = place
         self.shown = True
         self.section.place(x = place[0], y = place[1])
-        self.blank = generateColorBox(self.size, hexColorToRGBA(bg))
-        if type(instructions) == list:
-            for instruction in instructions:
-                placeOver(self.blank, instruction[0], instruction[1])
+        self.blankConnected = CONNECTED_ALLIANCE_BACKGROUND.copy()
+        self.blankDisconnected = DISCONNECTED_ALLIANCE_BACKGROUND.copy()
 
     def update(self, image:numpy.ndarray):
         '''Updates the label's image to the given array'''
         img = ImageTk.PhotoImage(image)
         self.section.configure(image = img)
         self.section.image = img
-    
-    def getBlank(self):
-        '''Returns a blank array with the label size'''
-        return self.blank.copy()
     
     def hide(self):
         '''Hides the label by moving it far off screen'''
@@ -40,11 +34,3 @@ class LabelWrapper:
         '''Shows the label by placing it back to its proper position'''
         self.section.place(x = self.position[0], y = self.position[1])
         self.shown = True
-
-def followInstructions(size, bg, instructions):
-    '''Returns an array given the size, background color, and instructions'''
-    blank = generateColorBox(size, hexColorToRGBA(bg))
-    if type(instructions) == list:
-        for instruction in instructions:
-            placeOver(blank, instruction[0], instruction[1])
-    return blank

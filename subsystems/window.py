@@ -14,7 +14,7 @@ class Window:
         self.window = tk.Tk()
         self.window.grid()
         self.window.title("Interactable Visual Objects!")
-        self.window.geometry("1366x698")
+        self.window.geometry("1500x865")
         # self.window.wm_attributes('-alpha', 0.5)
         # self.window.minsize(500,500)
         # self.window.maxsize(500,500)
@@ -27,21 +27,11 @@ class Window:
 
         '''load test image'''
         testImage = ImageTk.PhotoImage(TEST_IMAGE)
-        self.labels = {}
-        self.blankLabels = {}
-        for section in SECTIONS:
-            self.labels[section] = LabelWrapper(self.window, SECTIONS_DATA[section][2], SECTIONS_DATA[section][0], SECTIONS_DATA[section][0], BACKGROUND_COLOR, SECTIONS_FRAME_INSTRUCTIONS[section])
-            self.blankLabels[section] = self.labels[section].getBlank()
+        self.label = LabelWrapper(self.window, SECTION_DATA[2], SECTION_DATA[0], SECTION_DATA[0], BACKGROUND_COLOR, SECTION_FRAME_INSTRUCTIONS)
+        self.blankLabel = self.label.blankConnected
 
         '''start interface'''
         self.interface = Interface()
-
-        self.processFunctions = {
-            " " : self.interface.processNone,
-            "a" : self.interface.processExampleA,
-            "b" : self.interface.processExampleB,
-        }
-        self.processFunctionsRegions = list(self.processFunctions.keys())
 
     def windowProcesses(self):
         '''window processes'''
@@ -55,9 +45,7 @@ class Window:
         self.mouseScroll = 0
 
         if self.fps > INTERFACE_FPS:
-            for region in self.processFunctionsRegions:
-                if (region != " ") and (self.labels[region].shown):
-                    self.labels[region].update(self.processFunctions[region](self.blankLabels[region]))
+                self.label.update(self.interface.processNone(self.blankLabel))
 
         now = time.time()
         self.fpsTimestamps.append(now)
@@ -73,9 +61,8 @@ class Window:
         self.window.title(f"Interactable Visual Objects {self.interface.ticks}")
         print(self.getFPS())
 
-        for region in self.processFunctionsRegions:
-                if self.labels[region].shown:
-                    self.labels[region].update(self.processFunctions[region](self.blankLabels[region]))
+        if self.label.shown:
+            self.label.update(self.interface.processNone(self.blankLabel))
 
         self.window.after(OCCASIONAL_TICK_MS, self.windowOccasionalProcesses)
 

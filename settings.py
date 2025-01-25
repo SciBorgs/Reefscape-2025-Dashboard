@@ -49,29 +49,11 @@ from subsystems.lib.render import *
 VERSION = "v0.0.0"
 SYS_IVOS = [-999,-998,-997,-996]
 
-# Sections
-'''
-- Example A Area: `(  22,  22) to ( 671, 675)` : size `( 650, 654)`
-- Example B Area: `( 694,  22) to (1343, 675)` : size `( 650, 654)`
-
-Region ID : Top Left, Bottom Right, Size, Keep In Relative Top Left, Keep In Relative Top Right
-'''
-SECTIONS_DATA = {
-    " ": [(   0,   0),(   0,   0),(   0,   0),(   0,   0),(   0,   0)],
-    "a": [(  22,  22),( 671, 675),( 650, 654),(   0,   0),( 650, 654)],
-    "b": [( 694,  22),(1343, 675),( 650, 654),(   0,   0),( 650, 654)],
-}
-SECTIONS_FRAME_INSTRUCTIONS = {
-    " ": [],
-    "a": genereateThemedBorderRectangleInstructions(( 650, 654),hexColorToRGBA(FRAME_COLOR)),
-    "b": genereateThemedBorderRectangleInstructions(( 650, 654),hexColorToRGBA(FRAME_COLOR)),
-}
-SECTIONS = list(SECTIONS_DATA.keys())
 
 # Fonts
 FONTS_ALL = ["Orbitron-VariableFont_wght.ttf"]
 FONT_PATH = os.path.join("resources", "fonts", FONTS_ALL[0])
-FONT_LARGE = ImageFont.truetype(FONT_PATH, 24)
+FONT_LARGE = ImageFont.truetype(FONT_PATH, 35)
 FONT_MEDIUM = ImageFont.truetype(FONT_PATH, 15)
 FONT_SMALL_MEDIUM = ImageFont.truetype(FONT_PATH, 12)
 FONT_SMALL = ImageFont.truetype(FONT_PATH, 10)
@@ -79,3 +61,12 @@ EDITOR_SPACING = lambda x: x*20+15
 
 # Images
 TEST_IMAGE = getImageRGBAFromPath(os.path.join("resources", "test.png"))
+CONNECTED_ALLIANCE_BACKGROUND = getImageRGBAFromPath(os.path.join("resources", "bg_connected.png"))
+DISCONNECTED_ALLIANCE_BACKGROUND = getImageRGBAFromPath(os.path.join("resources", "bg_disconnected.png"))
+
+# Sections
+'''
+Region ID : Top Left, Bottom Right, Size, Keep In Relative Top Left, Keep In Relative Top Right
+'''
+SECTION_DATA = [(   0,   0),(1500, 865),(1500, 865),(   0,   0),(1500, 865)]
+SECTION_FRAME_INSTRUCTIONS = [[DISCONNECTED_ALLIANCE_BACKGROUND,(0,0)], [CONNECTED_ALLIANCE_BACKGROUND,(0,0)]]

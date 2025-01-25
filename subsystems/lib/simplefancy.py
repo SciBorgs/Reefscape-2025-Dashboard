@@ -58,7 +58,7 @@ def translatePastelLight(color):
     colorC = colorsys.hsv_to_rgb(colorC[0],colorC[1],colorC[2])
     return [round(colorC[0]*255), round(colorC[1]*255), round(colorC[2]*255), color[3]]
 
-def genereateThemedBorderRectangleInstructions(size:list|tuple = (25,25),borderColor:list|tuple = (255,255,255,255), background:Image = None, backgroundOffset:list|tuple = (0,0)):
+def generateThemedBorderRectangleInstructions(size:list|tuple = (25,25),borderColor:list|tuple = (255,255,255,255), background:Image = None, backgroundOffset:list|tuple = (0,0)):
     instructions = []
     if background != None: instructions.append([background, backgroundOffset])
     row = generateColorBox((size[0],3), borderColor)

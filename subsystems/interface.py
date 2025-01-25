@@ -34,7 +34,8 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # Example Usage
-            -99 : ["a", ButtonVisualObject("example", (145,165), TEST_IMAGE, TEST_IMAGE)]
+            -99 : ["a", ButtonVisualObject("example", (145,165), TEST_IMAGE, TEST_IMAGE)],
+            -98 : ["a", BranchButtonVisualObject("test", (200,200), "A")]
         }
         '''Control'''
         self.interacting = -999
@@ -50,11 +51,11 @@ class Interface:
         pass
 
     def tick(self,mx,my,mPressed,fps,keyQueue,mouseScroll):
-        '''Entire Screen: `(0,0) to (1365,697)`: size `(1366,698)`'''
+        '''Entire Screen: `(0,0) to (1499, 864)`: size `(1500, 865)`'''
         self.prevmx = self.mx
         self.prevmy = self.my
-        self.mx = mx if (0<=mx and mx<=1365) and (0<=my and my<=697) else self.mx 
-        self.my = my if (0<=mx and mx<=1365) and (0<=my and my<=697) else self.my
+        self.mx = mx if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.mx 
+        self.my = my if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.my
         self.mPressed = mPressed > 0
         self.mRising = mPressed==2
         self.fps = fps
@@ -78,17 +79,14 @@ class Interface:
         if self.interacting == -999 and self.mPressed and self.mRising:
             processed = False
             for id in self.ivos:
-                for section in SECTIONS:
-                    if self.ivos[id][0] == section:
-                        if self.ivos[id][1].getInteractable(self.mx - SECTIONS_DATA[section][0][0], self.my - SECTIONS_DATA[section][0][1]):
-                            self.interacting = id
-                            processed = True
-                            break
+                if self.ivos[id][1].getInteractable(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1]):
+                    self.interacting = id
+                    processed = True
+                    break
                 if processed: break
         if self.interacting != -999:
-            section = self.ivos[self.interacting][0]
-            self.ivos[self.interacting][1].updatePos(self.mx - SECTIONS_DATA[section][0][0], self.my - SECTIONS_DATA[section][0][1])
-            self.ivos[self.interacting][1].keepInFrame(SECTIONS_DATA[section][3][0],SECTIONS_DATA[section][3][1],SECTIONS_DATA[section][4][0],SECTIONS_DATA[section][4][1])
+            self.ivos[self.interacting][1].updatePos(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1])
+            self.ivos[self.interacting][1].keepInFrame(SECTION_DATA[3][0],SECTION_DATA[3][1],SECTION_DATA[4][0],SECTION_DATA[4][1])
         if (self.mPressed) and (self.previousInteracting == -999) and (self.interacting != -999) and (self.ivos[self.interacting][1].type  == "textbox"): 
             self.stringKeyQueue = self.ivos[self.interacting][1].txt
         if (self.interacting != -999) and (self.ivos[self.interacting][1].type  == "textbox"):
@@ -102,10 +100,6 @@ class Interface:
                     self.ivos[self.previousInteracting][1].updateText(self.stringKeyQueue)
 
     def processNone(self, im):
-        return im
-
-    def processExampleA(self, im):
-        '''Example A Area: `(  22,  22) to ( 671, 675)` : size `( 650, 654)`'''
         img = im.copy()
         rmx = self.mx - 22
         rmy = self.my - 22
@@ -118,23 +112,6 @@ class Interface:
 
         for id in self.ivos:
             if self.ivos[id][0] == "a":
-                self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
-
-        return img    
-    
-    def processExampleB(self, im):
-        '''Example B Area: `( 694,  22) to (1343, 675)` : size `( 650, 654)`'''
-        img = im.copy()
-        rmx = self.mx - 694
-        rmy = self.my - 22
-
-        choice = TEST_IMAGE
-        for i in range(25):
-            placeOver(img, choice, (math.cos((self.ticks/5+i/25))*250 + 325, math.sin((self.ticks/5+i/25))*250 + 327))
-            placeOver(img, choice, (math.cos((self.ticks/2+i/25))*100 + 325, math.sin((self.ticks/2+i/25))*100 + 327))
-
-        for id in self.ivos:
-            if self.ivos[id][0] == "b":
                 self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
 
         return img    
