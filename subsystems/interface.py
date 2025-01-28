@@ -133,6 +133,8 @@ class Interface:
             self.ivos[i][1].setAlliance(alliance)
         for i in range(51,54+1):
             self.ivos[i][1].setAlliance(alliance)
+        self.ivos[-50][1].setAlliance(alliance)
+        self.ivos[-49][1].setAlliance(alliance)
 
 
 

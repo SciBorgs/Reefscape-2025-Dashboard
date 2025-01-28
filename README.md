@@ -5,11 +5,16 @@ Big thanks to [wpilibsuite/StandaloneAppSamples](https://github.com/wpilibsuite/
 
 Also, thanks to [HenryLi-0/ivo](https://github.com/HenryLi-0/ivo/tree/main) for being the rendering system, which this dashboard uses a modified version of!
 
-## Structure
-The code is centered around [`subsystems/`](subsystems/). The NetworkTables system is in [`subsystems/comms.py`](</subsystems/comms.py>), while the interface is in [`interface.py`](</subsystems/interface.py>). The logic is also located in `interface.py`, under `tick()`. Checkout the [`resources/`](<resources/>) directory to view image files. 
-
-All other files contain the files needed to run IVO, and changes are not recommended to these.
-
 ## Setup
 
-Run `setup.bat` for to quickly install modules. Alternatively, see `requirements.txt` for the necessary modules to install.
+After you've obtained this code locally, run [`setup.bat`](</setup.bat>) for to quickly install modules! Alternatively, see [`requirements.txt`](</requirements.txt>) for the necessary modules to install.
+
+## Usage
+
+Run [`main.py`](</main.py>)! Visit [`settings.py`](</settings.py>) to modify settings (very important, get familiar with it and double check before running!)
+
+## Structure
+
+The code is centered around [`subsystems/`](</subsystems/>)! The NetworkTables system is in [`subsystems/comms.py`](</subsystems/comms.py>), while the interface is in [`interface.py`](</subsystems/interface.py>). The logic is also located in `interface.py`, under `tick()`. Checkout the [`resources/`](</resources/>) directory to view image files. 
+
+All other files contain the files needed to run IVO, and changes are not recommended to these.
