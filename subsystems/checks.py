@@ -13,8 +13,10 @@ from subsystems.lib.label import *
 from subsystems.lib.render import *
 from subsystems.lib.simplefancy import *
 from subsystems.lib.visuals import *
+from subsystems.comms import *
 from subsystems.interface import *
 from subsystems.window import *
+from settings import *
 
 class Check:
     def check():

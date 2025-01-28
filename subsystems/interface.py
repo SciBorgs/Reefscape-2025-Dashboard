@@ -78,7 +78,7 @@ class Interface:
                 self.lastTouchScreenPress = time.time()
                 self.mPressed = True
                 self.mRising = True
-            elif  abs(time.time()-self.lastTouchScreenPress) < 0.2:
+            elif  abs(time.time()-self.lastTouchScreenPress) < 0.1:
                 self.mPressed = True
             else:
                 self.mPressed = mPressed
@@ -133,20 +133,26 @@ class Interface:
 
 
 
-    def processNone(self, im):
+    def process(self, im):
         img = im.copy()
         rmx = self.mx - 22
         rmy = self.my - 22
 
         placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
-        placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
-        placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
-        placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
-        placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
+        # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
+        # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
+        # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
+        # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
-        placeOver(img, displayText(f"Comms: Connected: {self.comms.getIsConnected()}", "m"), (20,775))
-        placeOver(img, displayText(f"Comms: Blue Alliance: {self.comms.getBlueAlliance()}", "m"), (20,800))
-        placeOver(img, displayText(f"Comms: Nearest: {self.comms.getNearest()}", "m"), (20,825))
+        connected = self.comms.getIsConnected()
+        placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,775))
+        if connected:
+            placeOver(img, displayText(f"Comms: Alliance: {"Blue" if self.comms.getBlueAlliance() else "Red"}", "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,800))
+            placeOver(img, displayText(f"Comms: Nearest: {self.comms.getNearest()}", "m"), (20,825))
+        else:
+            placeOver(img, displayText(f"Comms: Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
+            placeOver(img, displayText(f"Comms: Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
+            
 
         for id in self.ivos:
             if self.ivos[id][0] == "a":

@@ -25,22 +25,10 @@ OCCASIONAL_TICK_MS = 5000 # Should keep above 1 second, as it runs processes tha
 hexColorToRGBA = lambda hexcolor: tuple(int(hexcolor[i:i+2], 16) for i in (1, 3, 5)) + (255,)
 
 BACKGROUND_COLOR = "#333247" #Background color
-FRAME_COLOR      = "#524f6b" #Borders and Frame color
-SELECTED_COLOR   = "#bebcd5" #Selected Element color
-VOID_COLOR       = "#84829b" #Void color
-
 BACKGROUND_COLOR_RGBA = hexColorToRGBA(BACKGROUND_COLOR)
-FRAME_COLOR_RGBA      = hexColorToRGBA(FRAME_COLOR     )
-SELECTED_COLOR_RGBA   = hexColorToRGBA(SELECTED_COLOR  )
-VOID_COLOR_RGBA       = hexColorToRGBA(VOID_COLOR      )
 
 
-'''Saving'''
-import os, time
-PATH_SAVE_DEFAULT = os.path.join("saves")
-
-FORMAT_TIME = lambda x: time.strftime("%I:%M:%S %p %m/%d/%Y", time.localtime(x))
-
+import os
 from PIL import ImageFont
 from subsystems.lib.simplefancy import *
 from subsystems.lib.render import *

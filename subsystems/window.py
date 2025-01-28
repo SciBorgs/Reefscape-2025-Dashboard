@@ -46,7 +46,7 @@ class Window:
         self.mouseScroll = 0
 
         if self.fps > INTERFACE_FPS:
-            self.label.update(self.interface.processNone(self.blankConnected if self.interface.comms.getIsConnected() else self.blankDisconnected))
+            self.label.update(self.interface.process(self.blankConnected if self.interface.comms.getIsConnected() else self.blankDisconnected))
 
         now = time.time()
         self.fpsTimestamps.append(now)
@@ -63,7 +63,7 @@ class Window:
         print(self.getFPS())
 
         if self.label.shown:
-            self.label.update(self.interface.processNone(self.blankLabel))
+            self.label.update(self.interface.process(self.blankConnected if self.interface.comms.getIsConnected() else self.blankDisconnected))
 
         self.window.after(OCCASIONAL_TICK_MS, self.windowOccasionalProcesses)
 

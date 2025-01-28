@@ -2,7 +2,6 @@
 import tkinter as tk
 import numpy
 from PIL import Image, ImageTk
-from subsystems.lib.simplefancy import generateColorBox
 from settings import *
 from subsystems.lib.render import *
 
