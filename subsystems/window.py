@@ -79,8 +79,8 @@ class Window:
         '''start window main loop'''
         print("windowStart")
         
-        self.window.bind("<ButtonPress-1>", self.mPress)
-        self.window.bind("<ButtonRelease-1>", self.mRelease)
+        self.window.bind("<ButtonPress>", self.mPress)
+        self.window.bind("<ButtonRelease>", self.mRelease)
 
         self.window.after(2, self.windowProcesses)
         self.window.after(2, self.windowOccasionalProcesses)
