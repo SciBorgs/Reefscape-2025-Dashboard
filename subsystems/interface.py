@@ -100,17 +100,6 @@ class Interface:
         if self.interacting != -999:
             self.ivos[self.interacting][1].updatePos(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1])
             self.ivos[self.interacting][1].keepInFrame(SECTION_DATA[3][0],SECTION_DATA[3][1],SECTION_DATA[4][0],SECTION_DATA[4][1])
-        if (self.mPressed) and (self.previousInteracting == -999) and (self.interacting != -999) and (self.ivos[self.interacting][1].type  == "textbox"): 
-            self.stringKeyQueue = self.ivos[self.interacting][1].txt
-        if (self.interacting != -999) and (self.ivos[self.interacting][1].type  == "textbox"):
-            self.ivos[self.interacting][1].updateText(self.stringKeyQueue)
-        if (self.previousInteracting != -999) and (self.previousInteracting != -998):
-            if (self.ivos[self.previousInteracting][1].type  == "textbox"):
-                if not(self.interacting == -998):
-                    self.interacting = self.previousInteracting
-                    self.ivos[self.interacting][1].updateText(self.stringKeyQueue)
-                else:
-                    self.ivos[self.previousInteracting][1].updateText(self.stringKeyQueue)
 
         '''DASHBOARD THINGS'''
         if 0 <= self.interacting <= 11:

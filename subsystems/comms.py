@@ -32,8 +32,8 @@ class Comms:
         self.isConnected.setBoolean(value=True)
 
         # Entry for the robot's alliance
-        self.alliance = self.networkTable.getEntry(key="blueAlliance")
-        self.alliance.setBoolean(value=True)
+        self.blueAlliance = self.networkTable.getEntry(key="blueAlliance")
+        self.blueAlliance.setBoolean(value=True)
 
         # Entry for whether to score processor or not
         self.scoringProcessor = self.networkTable.getEntry(key="processor")
@@ -57,6 +57,12 @@ class Comms:
 
     def setLevel(self, level:int) -> None:
         self.targetLevel.setInteger(level)
+
+    def getNearest(self) -> str:
+        return self.closestBranch.getString("")
         
-        
+    def getIsConnected(self) -> bool:
+        return self.isConnected.getBoolean(False)
     
+    def getBlueAlliance(self) -> bool:
+        return self.blueAlliance.getBoolean(True)
