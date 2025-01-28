@@ -36,7 +36,8 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # Example Usage
-            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
+            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2-55), "GO")],
+            -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+55), "PS")],
         }
 
         for i in range(12):
@@ -121,8 +122,11 @@ class Interface:
             self.selectedLevel = self.interacting - 50
         elif self.interacting == -50:
             if self.selectedBranch != "" and self.selectedLevel != 0:
+                self.comms.setProcessor(False)
                 self.comms.setBranch(self.selectedBranch)
                 self.comms.setLevel(self.selectedLevel)
+        elif self.interacting == -49:
+            self.comms.setProcessor(True)
         else: pass
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
         for i in range(0,11+1):

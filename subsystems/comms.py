@@ -60,6 +60,9 @@ class Comms:
 
     def setLevel(self, level:int) -> None:
         self.entryTargetLevel.setInteger(value=level)
+    
+    def setProcessor(self, boolean:bool) -> None:
+        self.entryScoringProcessor.setBoolean(value=boolean)
 
     def getNearest(self) -> str:
         return self.entryClosestBranch.getString(defaultValue="")
