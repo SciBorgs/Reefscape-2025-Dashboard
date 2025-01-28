@@ -51,7 +51,7 @@ EDITOR_SPACING = lambda x: x*20+15
 TEST_IMAGE = getImageRGBAFromPath(os.path.join("resources", "test.png"))
 CONNECTED_ALLIANCE_BACKGROUND = getImageRGBAFromPath(os.path.join("resources", "bg_connected.png"))
 DISCONNECTED_ALLIANCE_BACKGROUND = getImageRGBAFromPath(os.path.join("resources", "bg_disconnected.png"))
-SUBWAY_GIF = getImageRGBAFromPath(os.path.join("resources", "subway guy.gif"))
+SUBWAY_GIF = Image.open(os.path.join("resources", "subway guy.gif"))
 
 # Sections
 '''

@@ -12,6 +12,11 @@ def getImageRGBAFromPath(path):
     '''Given a path, opens the image, converts it to RGBA, and returns the Image.'''
     return Image.open(path).convert("RGBA")
 
+def getFrameFromGIF(image, frame):
+    '''Given a GIF image, opens the GIF's (frame) frame, converts it to RGBA, and returns it.'''
+    image.seek(round(frame) % image.n_frames)
+    return image.copy().convert("RGBA")
+
 def generateColorBox(size:list|tuple = (25,25),color:list|tuple = (255,255,255,255)):
     '''Generates a box of (size) size of (color) color'''
     array = numpy.empty((size[1], size[0], 4), dtype=numpy.uint8)
