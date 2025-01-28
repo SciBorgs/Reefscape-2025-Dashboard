@@ -16,8 +16,6 @@ class LabelWrapper:
         self.position = place
         self.shown = True
         self.section.place(x = place[0], y = place[1])
-        self.blankConnected = CONNECTED_ALLIANCE_BACKGROUND.copy()
-        self.blankDisconnected = DISCONNECTED_ALLIANCE_BACKGROUND.copy()
 
     def update(self, image:numpy.ndarray):
         '''Updates the label's image to the given array'''

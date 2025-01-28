@@ -28,7 +28,8 @@ class Window:
         '''load test image'''
         testImage = ImageTk.PhotoImage(TEST_IMAGE)
         self.label = LabelWrapper(self.window, SECTION_DATA[2], SECTION_DATA[0], SECTION_DATA[0], BACKGROUND_COLOR, SECTION_FRAME_INSTRUCTIONS)
-        self.blankLabel = self.label.blankConnected
+        self.blankConnected = CONNECTED_ALLIANCE_BACKGROUND.copy()
+        self.blankDisconnected = DISCONNECTED_ALLIANCE_BACKGROUND.copy()
 
         '''start interface'''
         self.interface = Interface()
@@ -45,7 +46,7 @@ class Window:
         self.mouseScroll = 0
 
         if self.fps > INTERFACE_FPS:
-                self.label.update(self.interface.processNone(self.blankLabel))
+            self.label.update(self.interface.processNone(self.blankConnected if self.interface.comms.getIsConnected() else self.blankDisconnected))
 
         now = time.time()
         self.fpsTimestamps.append(now)
