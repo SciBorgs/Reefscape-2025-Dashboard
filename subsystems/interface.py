@@ -135,8 +135,6 @@ class Interface:
 
     def process(self, im):
         img = im.copy()
-        rmx = self.mx - 22
-        rmy = self.my - 22
 
         placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
         # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
@@ -152,11 +150,15 @@ class Interface:
         else:
             placeOver(img, displayText(f"Comms: Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
             placeOver(img, displayText(f"Comms: Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
-            
 
         for id in self.ivos:
             if self.ivos[id][0] == "a":
-                self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
+                if 0 <= id <= 11:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL".find(self.selectedBranch))
+                elif 51 <= id <= 54:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.selectedLevel+50)
+                else:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
 
         return img    
 

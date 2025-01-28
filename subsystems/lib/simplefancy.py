@@ -10,10 +10,7 @@ def getArrayImageRGBAFromPath(path):
 
 def getImageRGBAFromPath(path):
     '''Given a path, opens the image, converts it to RGBA, and returns the Image.'''
-    img = Image.open(path)
-    # for i in range(img.n_frames):
-    #     img.seek()
-    return img.convert("RGBA")
+    return Image.open(path).convert("RGBA")
 
 def generateColorBox(size:list|tuple = (25,25),color:list|tuple = (255,255,255,255)):
     '''Generates a box of (size) size of (color) color'''
