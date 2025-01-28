@@ -55,6 +55,7 @@ class Interface:
         self.mouseScroll = 0 
         self.consoleAlerts = []
         self.keybindLastUpdate = time.time()
+        self.lastTouchScreenPress = 0
         '''Sliders'''
         self.sliders = []
         self.slidersData = []
@@ -69,8 +70,19 @@ class Interface:
         self.prevmy = self.my
         self.mx = mx if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.mx 
         self.my = my if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.my
+
         self.mPressed = mPressed > 0
         self.mRising = mPressed==2
+        if TOUCHSCREEN:
+            if abs(self.prevmx-self.mx)+abs(self.prevmy-self.my) > 0:
+                self.lastTouchScreenPress = time.time()
+                self.mPressed = True
+                self.mRising = True
+            elif  abs(time.time()-self.lastTouchScreenPress) < 0.2:
+                self.mPressed = True
+            else:
+                self.mPressed = mPressed
+
         self.fps = fps
         self.deltaTicks = 1 if self.fps==0 else round(INTERFACE_FPS/self.fps)
         self.ticks += self.deltaTicks
@@ -102,6 +114,7 @@ class Interface:
             self.ivos[self.interacting][1].keepInFrame(SECTION_DATA[3][0],SECTION_DATA[3][1],SECTION_DATA[4][0],SECTION_DATA[4][1])
 
         '''DASHBOARD THINGS'''
+        self.comms.tick()
         if 0 <= self.interacting <= 11:
             self.selectedBranch = "ABCDEFGHIJKL"[self.interacting]
         elif 51 <= self.interacting <= 54:
@@ -111,14 +124,12 @@ class Interface:
                 self.comms.setBranch(self.selectedBranch)
                 self.comms.setLevel(self.selectedLevel)
         else: pass
-        if self.comms.getIsConnected():
+        alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
+        for i in range(0,11+1):
+            self.ivos[i][1].setAlliance(alliance)
+        for i in range(51,54+1):
+            self.ivos[i][1].setAlliance(alliance)
 
-            self.comms.getBlueAlliance()
-        else:
-            for i in range(0,11+1):
-                self.ivos[i][1].setAlliance("disconnected")
-            for i in range(51,54+1):
-                self.ivos[i][1].setAlliance("disconnected")
 
 
 
@@ -132,6 +143,10 @@ class Interface:
         placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
         placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
         placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
+
+        placeOver(img, displayText(f"Comms: Connected: {self.comms.getIsConnected()}", "m"), (20,775))
+        placeOver(img, displayText(f"Comms: Blue Alliance: {self.comms.getBlueAlliance()}", "m"), (20,800))
+        placeOver(img, displayText(f"Comms: Nearest: {self.comms.getNearest()}", "m"), (20,825))
 
         for id in self.ivos:
             if self.ivos[id][0] == "a":

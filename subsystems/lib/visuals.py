@@ -218,17 +218,25 @@ class BranchButtonVisualObject(VisualObject):
         self.type = "branch button"
         self.name = name
         self.lastInteraction = time.time()
+
+        overlayText = displayText(str(branch), "l", bold = True)
         self.imgDisconnected = generateBorderBox((94,94), 3, (50,50,50,255))
-        placeOver(self.imgDisconnected, displayText(str(branch), "l", bold = True), (50, 50), True)
+        placeOver(self.imgDisconnected, overlayText, (50, 50), True)
+
         self.imgRed = generateBorderBox((94,94), 3, (255,0,0,255))
-        placeOver(self.imgRed, displayText(str(branch), "l", bold = True), (50, 50), True)
+        placeOver(self.imgRed, overlayText, (50, 50), True)
+
         self.imgBlue = generateBorderBox((94,94), 3, (0,0,255,255))
-        placeOver(self.imgBlue, displayText(str(branch), "l", bold = True), (50, 50), True)
+        placeOver(self.imgBlue, overlayText, (50, 50), True)
+        
+        self.imgActive = generateBorderBox((94,94), 3, (254,221,16,255))
+        placeOver(self.imgActive, overlayText, (50, 50), True)
+        
         self.img = self.imgDisconnected
         self.positionO = RectangularPositionalBox((self.img.width,self.img.height), pos[0] - 50, pos[1] - 50)
     def tick(self, img, visualactive, active):
         if active: self.lastInteraction = time.time()
-        placeOver(img, self.img2 if active else self.img, self.positionO.getPosition(), False)
+        placeOver(img, self.imgActive if active else self.img, self.positionO.getPosition(), False)
     def setAlliance(self, alliance):
         if alliance == "blue": self.img = self.imgBlue
         elif alliance == "red": self.img = self.imgRed

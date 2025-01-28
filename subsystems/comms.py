@@ -20,50 +20,60 @@ class Comms:
             instance.setServer(server_name="localhost")
 
         # Entry for the target branch to score on
-        self.targetBranch = self.networkTable.getEntry(key="branch")
-        self.targetBranch.setString(value="")
+        self.entryTargetBranch = self.networkTable.getEntry(key="branch")
+        self.entryTargetBranch.setString(value="")
 
         # Entry for the target level to score on
-        self.targetLevel = self.networkTable.getEntry(key="level")
-        self.targetLevel.setInteger(value=0)
-
-        # Entry for the status of the connection
-        self.isConnected = self.networkTable.getEntry(key="robotConnected")
-        self.isConnected.setBoolean(value=True)
+        self.entryTargetLevel = self.networkTable.getEntry(key="level")
+        self.entryTargetLevel.setInteger(value=0)
 
         # Entry for the robot's alliance
-        self.blueAlliance = self.networkTable.getEntry(key="blueAlliance")
-        self.blueAlliance.setBoolean(value=True)
+        self.entryBlueAlliance = self.networkTable.getEntry(key="blueAlliance")
+        self.entryBlueAlliance.setBoolean(value=True)
 
         # Entry for whether to score processor or not
-        self.scoringProcessor = self.networkTable.getEntry(key="processor")
-        self.scoringProcessor.setBoolean(value=False)
+        self.entryScoringProcessor = self.networkTable.getEntry(key="processor")
+        self.entryScoringProcessor.setBoolean(value=False)
 
         # Entry for the closest branch
-        self.closestBranch = self.networkTable.getEntry(key="closestBranch")
-        self.closestBranch.setString(value="")
+        self.entryClosestBranch = self.networkTable.getEntry(key="closestBranch")
+        self.entryClosestBranch.setString(value="")
+
+        # Entry for the status of the connection
+        self.entryRobotTick = self.networkTable.getEntry(key="robotTick")
+        self.entryRobotTick.setInteger(value=0)
+        self.previousRobotTick = self.entryRobotTick.getInteger(defaultValue=0)
+        self.lastRobotTickDetection = time.time()
 
         # Tracks update ticks
-        self.tick = self.networkTable.getEntry(key="tick")
-        self.tick.setInteger(value=0)
+        self.entryDashboardTick = self.networkTable.getEntry(key="dashboardTick")
+        self.entryDashboardTick.setInteger(value=0)
+        self.dashboardTick = 0
 
-    def update(self) -> None:
+    def tick(self) -> None:
         '''Meant to be called periodically'''
-        time.sleep(0.02)
-        self.tick.setInteger(value=self.tick.getInteger(defaultValue=0) + 1)
+        self.dashboardTick += 1
+        self.entryDashboardTick.setInteger(value=self.dashboardTick)
         
     def setBranch(self, branch:str) -> None:
-        self.targetBranch.setString(branch)
+        self.entryTargetBranch.setString(value=branch)
 
     def setLevel(self, level:int) -> None:
-        self.targetLevel.setInteger(level)
+        self.entryTargetLevel.setInteger(value=level)
 
     def getNearest(self) -> str:
-        return self.closestBranch.getString("")
+        return self.entryClosestBranch.getString(defaultValue="")
         
     def getIsConnected(self) -> bool:
-        return self.isConnected.getBoolean(False)
+        fetch = self.entryRobotTick.getInteger(defaultValue=0)
+        if fetch != self.previousRobotTick:
+            self.lastRobotTickDetection = time.time()
+            self.previousRobotTick = fetch
+            return True
+        elif abs(time.time() - self.lastRobotTickDetection) < 0.2:
+            return True
+        else: return False
     
     def getBlueAlliance(self) -> bool:
-        return self.blueAlliance.getBoolean(True)
+        return self.entryBlueAlliance.getBoolean(defaultValue=True)
     

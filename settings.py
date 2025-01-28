@@ -1,11 +1,11 @@
 
 '''DASHBOARD SETTINGS'''
+
+# Defines whether the robot is real or not. Determines connection method.
 REAL = False
 
-
-
-
-
+# Changes the method of detection. Touchscreen detects sudden mouse teleportation as a click.
+TOUCHSCREEN = True 
 
 
 
