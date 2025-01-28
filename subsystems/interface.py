@@ -111,6 +111,14 @@ class Interface:
                 self.comms.setBranch(self.selectedBranch)
                 self.comms.setLevel(self.selectedLevel)
         else: pass
+        if self.comms.getIsConnected():
+
+            self.comms.getBlueAlliance()
+        else:
+            for i in range(0,11+1):
+                self.ivos[i][1].setAlliance("disconnected")
+            for i in range(51,54+1):
+                self.ivos[i][1].setAlliance("disconnected")
 
 
 

@@ -66,3 +66,4 @@ class Comms:
     
     def getBlueAlliance(self) -> bool:
         return self.blueAlliance.getBoolean(True)
+    
