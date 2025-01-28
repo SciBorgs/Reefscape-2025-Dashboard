@@ -24,7 +24,7 @@ OCCASIONAL_TICK_MS = 5000 # Should keep above 1 second, as it runs processes tha
 
 hexColorToRGBA = lambda hexcolor: tuple(int(hexcolor[i:i+2], 16) for i in (1, 3, 5)) + (255,)
 
-BACKGROUND_COLOR = "#333247" #Background color
+BACKGROUND_COLOR = "#000000" #Background color
 BACKGROUND_COLOR_RGBA = hexColorToRGBA(BACKGROUND_COLOR)
 
 
@@ -51,6 +51,7 @@ EDITOR_SPACING = lambda x: x*20+15
 TEST_IMAGE = getImageRGBAFromPath(os.path.join("resources", "test.png"))
 CONNECTED_ALLIANCE_BACKGROUND = getImageRGBAFromPath(os.path.join("resources", "bg_connected.png"))
 DISCONNECTED_ALLIANCE_BACKGROUND = getImageRGBAFromPath(os.path.join("resources", "bg_disconnected.png"))
+SUBWAY_GIF = getImageRGBAFromPath(os.path.join("resources", "subway guy.gif"))
 
 # Sections
 '''

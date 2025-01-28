@@ -36,7 +36,7 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # Example Usage
-            -50 : ["a", BranchButtonVisualObject("go", (100, 865/2), "GO")],
+            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
         }
 
         for i in range(12):
@@ -44,7 +44,7 @@ class Interface:
             self.ivos[i] = ["a", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
 
         for i in range(1,5):
-            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1391, (3-i-0.5)*(110)+865/2),"L" + str(i))]
+            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1389, (3-i-0.5)*(110)+865/2),"L" + str(i))]
 
 
         '''Control'''
