@@ -3,8 +3,10 @@
 '''Test import all major modules'''
 from PIL import Image, ImageTk, ImageDraw
 import tkinter as tk
-import os, numpy, time, math, robotpy
+import os, numpy, time, math
+
 from settings import *
+if COMMS: import robotpy
 
 '''Test import all subsystems'''
 from subsystems.lib.counter import *
