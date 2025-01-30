@@ -10,6 +10,14 @@ TOUCHSCREEN = True
 # Controls communications. Disabling this disables all the dashboard's NetworkTables functions.
 COMMS = True
 
+# Sets which modes allow stimulation devices to display. (Note: Stimulation devices affect performance!)
+STIMULATION = [
+    "disconnected",
+    # "red",
+    # "blue",
+    ]
+
+
 
 
 

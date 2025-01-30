@@ -175,7 +175,7 @@ class Interface:
             placeOver(img, displayText(f"Comms: Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
             placeOver(img, displayText(f"Comms: Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
 
-        if not(connected):
+        if self.alliance in STIMULATION:
             subway = getFrameFromGIF(SUBWAY_GIF, time.time()*16)
             placeOver(img, subway, ( 210,  10))
             placeOver(img, subway, (1150,  10))
