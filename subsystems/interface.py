@@ -149,7 +149,8 @@ class Interface:
             self.ivos[-49][1].setAlliance(alliance)
             self.alliance = alliance
             self.needUpdate = True
-
+        if alliance == "disconnected":
+            self.needUpdate = True
 
 
 

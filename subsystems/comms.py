@@ -80,7 +80,7 @@ class Comms:
                 self.lastRobotTickDetection = time.time()
                 self.previousRobotTick = fetch
                 return True
-            elif abs(time.time() - self.lastRobotTickDetection) < 0.2:
+            elif abs(time.time() - self.lastRobotTickDetection) < 0.25:
                 return True
             else: return False
         else: return True
