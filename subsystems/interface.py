@@ -67,7 +67,7 @@ class Interface:
         self.needUpdate = True
         pass
 
-    def tick(self,mx,my,mPressed,fps,keyQueue,mouseScroll):
+    def tick(self,mx,my,mPressed,fps):
         '''Entire Screen: `(0,0) to (1499, 864)`: size `(1500, 865)`'''
         self.prevmx = self.mx
         self.prevmy = self.my

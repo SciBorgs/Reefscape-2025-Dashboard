@@ -22,9 +22,6 @@ class Window:
         self.fps = 0
         self.fpsTimestamps = []
         self.mPressed = False
-        self.keysPressed = []
-        self.mouseScroll = 0
-        self.lastPressed = time.time()
 
         '''load test image'''
         testImage = ImageTk.PhotoImage(TEST_IMAGE)
@@ -41,12 +38,11 @@ class Window:
         my = self.window.winfo_pointery()-self.window.winfo_rooty()
         if self.mPressed > 0: 
             self.mPressed += 1
-            self.lastPressed = time.time()
         else: 
             self.mPressed = 0
 
         '''update screens'''
-        self.interface.tick(mx,my,self.mPressed, self.fps, self.keysPressed, self.mouseScroll)
+        self.interface.tick(mx,my,self.mPressed, self.fps)
         self.mouseScroll = 0
 
         if self.interface.needUpdate:
