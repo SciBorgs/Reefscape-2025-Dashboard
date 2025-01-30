@@ -63,6 +63,8 @@ class Interface:
         '''DASHBOARD STUFF'''
         self.selectedBranch = ""
         self.selectedLevel = 0
+        self.alliance = ""
+        self.needUpdate = True
         pass
 
     def tick(self,mx,my,mPressed,fps,keyQueue,mouseScroll):
@@ -72,31 +74,24 @@ class Interface:
         self.mx = mx if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.mx 
         self.my = my if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.my
 
-        self.mPressed = mPressed > 0
-        self.mRising = mPressed==2
         if TOUCHSCREEN:
-            if abs(self.prevmx-self.mx)+abs(self.prevmy-self.my) > 0:
-                self.lastTouchScreenPress = time.time()
+            self.mRising = False
+            if (abs(self.prevmx-self.mx)+abs(self.prevmy-self.my) > 0 and (not(self.mPressed))):
+                self.lastTouchScreenPress = self.ticks
                 self.mPressed = True
                 self.mRising = True
-            elif  abs(time.time()-self.lastTouchScreenPress) < 0.1:
-                self.mPressed = True
             else:
-                self.mPressed = mPressed
+                self.mPressed = False
+            if mPressed > 0: 
+                self.lastTouchScreenPress = self.ticks
+                self.mPressed = True
+        else:
+            self.mPressed = mPressed > 0
+            self.mRising = mPressed==2
 
         self.fps = fps
         self.deltaTicks = 1 if self.fps==0 else round(INTERFACE_FPS/self.fps)
         self.ticks += self.deltaTicks
-
-        '''Mouse Scroll'''
-        self.mouseScroll = mouseScroll
-        if abs(self.mouseScroll) > 0:
-            if self.interacting == -999: self.interacting = -996
-            if self.interacting == -996:
-                print("scrolling!")
-        else:
-            if self.interacting == -996: self.interacting = -999
-        pass
 
         '''Interacting With...'''
         self.previousInteracting = self.interacting
@@ -116,25 +111,44 @@ class Interface:
 
         '''DASHBOARD THINGS'''
         self.comms.tick()
-        if 0 <= self.interacting <= 11:
-            self.selectedBranch = "ABCDEFGHIJKL"[self.interacting]
-        elif 51 <= self.interacting <= 54:
-            self.selectedLevel = self.interacting - 50
-        elif self.interacting == -50:
-            if self.selectedBranch != "" and self.selectedLevel != 0:
-                self.comms.setProcessor(False)
-                self.comms.setBranch(self.selectedBranch)
-                self.comms.setLevel(self.selectedLevel)
-        elif self.interacting == -49:
-            self.comms.setProcessor(True)
-        else: pass
+        if self.mRising or self.interacting != self.previousInteracting:
+            self.needUpdate = True
+        if self.mRising:
+            if 0 <= self.interacting <= 11:
+                new = "ABCDEFGHIJKL"[self.interacting]
+                if self.selectedBranch != new: self.selectedBranch = new
+                else: self.selectedBranch = ""
+            elif 51 <= self.interacting <= 54:
+                new = self.interacting - 50
+                if self.selectedLevel != new: self.selectedLevel = new
+                else: self.selectedLevel = 0
+            elif self.interacting == -49:
+                self.selectedBranch = "processor"
+                self.selectedLevel = 0
+            elif self.interacting == -50:
+                if self.selectedBranch == "processor":
+                    self.comms.setProcessor(True)
+                    self.selectedBranch = ""
+                    self.selectedLevel = 0
+                elif self.selectedBranch != "" and self.selectedLevel != 0:
+                    self.comms.setProcessor(False)
+                    self.comms.setBranch(self.selectedBranch)
+                    self.comms.setLevel(self.selectedLevel)
+                    self.selectedBranch = ""
+                    self.selectedLevel = 0
+                else: pass
+            else: pass
+
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
-        for i in range(0,11+1):
-            self.ivos[i][1].setAlliance(alliance)
-        for i in range(51,54+1):
-            self.ivos[i][1].setAlliance(alliance)
-        self.ivos[-50][1].setAlliance(alliance)
-        self.ivos[-49][1].setAlliance(alliance)
+        if self.alliance != alliance:
+            for i in range(0,11+1):
+                self.ivos[i][1].setAlliance(alliance)
+            for i in range(51,54+1):
+                self.ivos[i][1].setAlliance(alliance)
+            self.ivos[-50][1].setAlliance(alliance)
+            self.ivos[-49][1].setAlliance(alliance)
+            self.alliance = alliance
+            self.needUpdate = True
 
 
 
@@ -143,13 +157,13 @@ class Interface:
         img = im.copy()
 
         placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
-        # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
-        # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
-        # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
-        # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
+        placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
+        placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
+        placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
+        placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
-        if not(COMMS):
-            placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,55))
+        # if not(COMMS):
+        #     placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,55))
 
         connected = self.comms.getIsConnected()
         placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,775))
@@ -174,6 +188,8 @@ class Interface:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL".find(self.selectedBranch))
                 elif 51 <= id <= 54:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.selectedLevel+50)
+                elif id == -49:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.selectedBranch=="processor")
                 else:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
 

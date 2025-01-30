@@ -13,7 +13,7 @@ class Window:
         '''initalize tk window'''
         self.window = tk.Tk()
         self.window.grid()
-        self.window.title("Interactable Visual Objects!")
+        self.window.title("Reefscape 2025 - Dashboard")
         self.window.geometry("1500x865")
         # self.window.wm_attributes('-alpha', 0.5)
         # self.window.minsize(500,500)
@@ -24,6 +24,7 @@ class Window:
         self.mPressed = False
         self.keysPressed = []
         self.mouseScroll = 0
+        self.lastPressed = time.time()
 
         '''load test image'''
         testImage = ImageTk.PhotoImage(TEST_IMAGE)
@@ -38,15 +39,19 @@ class Window:
         '''window processes'''
         mx = self.window.winfo_pointerx()-self.window.winfo_rootx()
         my = self.window.winfo_pointery()-self.window.winfo_rooty()
-        if self.mPressed > 0: self.mPressed += 1
-        else: self.mPressed = 0
+        if self.mPressed > 0: 
+            self.mPressed += 1
+            self.lastPressed = time.time()
+        else: 
+            self.mPressed = 0
 
         '''update screens'''
         self.interface.tick(mx,my,self.mPressed, self.fps, self.keysPressed, self.mouseScroll)
         self.mouseScroll = 0
 
-        if self.fps > INTERFACE_FPS:
+        if self.interface.needUpdate:
             self.label.update(self.interface.process(self.blankConnected if self.interface.comms.getIsConnected() else self.blankDisconnected))
+            self.interface.needUpdate = False
 
         now = time.time()
         self.fpsTimestamps.append(now)
@@ -59,7 +64,6 @@ class Window:
     def windowOccasionalProcesses(self):
         '''window processes that happen less frequently (once every 5 seconds)'''
         print("windowOccaionalProcess")
-        self.window.title(f"Interactable Visual Objects {self.interface.ticks}")
         print(self.getFPS())
 
         if self.label.shown:
