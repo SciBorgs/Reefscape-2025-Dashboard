@@ -61,7 +61,7 @@ class Interface:
         self.sliders = []
         self.slidersData = []
         '''DASHBOARD STUFF'''
-        self.selectedBranch = ""
+        self.selectedBranch = " "
         self.selectedLevel = 0
         self.alliance = ""
         self.needUpdate = True
@@ -117,24 +117,27 @@ class Interface:
             if 0 <= self.interacting <= 11:
                 new = "ABCDEFGHIJKL"[self.interacting]
                 if self.selectedBranch != new: self.selectedBranch = new
-                else: self.selectedBranch = ""
+                else: self.selectedBranch = " "
             elif 51 <= self.interacting <= 54:
                 new = self.interacting - 50
-                if self.selectedLevel != new: self.selectedLevel = new
-                else: self.selectedLevel = 0
+                if self.selectedLevel != new: 
+                    self.selectedLevel = new
+                    if self.selectedBranch == "processor": self.selectedBranch = " "
+                else: 
+                    self.selectedLevel = 0
             elif self.interacting == -49:
                 self.selectedBranch = "processor"
                 self.selectedLevel = 0
             elif self.interacting == -50:
                 if self.selectedBranch == "processor":
                     self.comms.setProcessor(True)
-                    self.selectedBranch = ""
+                    self.selectedBranch = " "
                     self.selectedLevel = 0
-                elif self.selectedBranch != "" and self.selectedLevel != 0:
+                elif self.selectedBranch != " " and self.selectedLevel != 0:
                     self.comms.setProcessor(False)
                     self.comms.setBranch(self.selectedBranch)
                     self.comms.setLevel(self.selectedLevel)
-                    self.selectedBranch = ""
+                    self.selectedBranch = " "
                     self.selectedLevel = 0
                 else: pass
             else: pass
@@ -158,13 +161,14 @@ class Interface:
         img = im.copy()
 
         placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
-        placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
-        placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
-        placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
-        placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
+        # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
+        # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
+        # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
+        # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
-        # if not(COMMS):
-        #     placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,55))
+        placeOver(img, displayText(f"Selected: {self.selectedBranch}{" " if self.selectedLevel==0 else self.selectedLevel}", "m"), (20,55))
+        if not(COMMS):
+            placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,90))
 
         connected = self.comms.getIsConnected()
         placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,775))
@@ -177,16 +181,16 @@ class Interface:
 
         if self.alliance in STIMULATION:
             subway = getFrameFromGIF(SUBWAY_GIF, time.time()*16)
-            placeOver(img, subway, ( 210,  10))
-            placeOver(img, subway, (1150,  10))
-            placeOver(img, subway, ( 210, 615))
-            placeOver(img, subway, (1150, 615))
+            placeOver(img, subway, ( 230,  10))
+            placeOver(img, subway, (1130,  10))
+            placeOver(img, subway, ( 230, 615))
+            placeOver(img, subway, (1130, 615))
             placeOver(img, subway, ( 670, 300))
 
         for id in self.ivos:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL".find(self.selectedBranch))
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.selectedBranch))
                 elif 51 <= id <= 54:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.selectedLevel+50)
                 elif id == -49:
