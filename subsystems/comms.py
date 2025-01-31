@@ -1,21 +1,15 @@
 import time
-
-from settings import COMMS
-
-if COMMS:
-    import ntcore
-
+from ntcore import NetworkTableInstance,NetworkTable,NetworkTableEntry
 from settings import *
-
 
 class Comms:
     '''Handles communication between the program and network tables'''
     def __init__(self) -> None:
         if COMMS:
-            instance = ntcore.NetworkTableInstance.getDefault()
+            instance: NetworkTableInstance = NetworkTableInstance.getDefault()
             instance.startClient4(identity="Dashboard")
 
-            self.networkTable = instance.getTable(key="Dashboard")
+            self.networkTable: NetworkTable = instance.getTable(key="Dashboard")
 
             if REAL:
                 instance.setServerTeam(team=1155, port=5810)
@@ -24,33 +18,33 @@ class Comms:
                 instance.setServer(server_name="localhost")
 
             # Entry for the target branch to score on
-            self.entryTargetBranch = self.networkTable.getEntry(key="branch")
+            self.entryTargetBranch: NetworkTableEntry = self.networkTable.getEntry(key="branch")
             self.entryTargetBranch.setString(value="")
 
             # Entry for the target level to score on
-            self.entryTargetLevel = self.networkTable.getEntry(key="level")
+            self.entryTargetLevel: NetworkTableEntry = self.networkTable.getEntry(key="level")
             self.entryTargetLevel.setInteger(value=0)
 
             # Entry for the robot's alliance
-            self.entryBlueAlliance = self.networkTable.getEntry(key="blueAlliance")
+            self.entryBlueAlliance: NetworkTableEntry = self.networkTable.getEntry(key="blueAlliance")
             self.entryBlueAlliance.setBoolean(value=True)
 
             # Entry for whether to score processor or not
-            self.entryScoringProcessor = self.networkTable.getEntry(key="processor")
+            self.entryScoringProcessor: NetworkTableEntry = self.networkTable.getEntry(key="processor")
             self.entryScoringProcessor.setBoolean(value=False)
 
             # Entry for the closest branch
-            self.entryClosestBranch = self.networkTable.getEntry(key="closestBranch")
+            self.entryClosestBranch: NetworkTableEntry = self.networkTable.getEntry(key="closestBranch")
             self.entryClosestBranch.setString(value="")
 
             # Entry for the status of the connection
-            self.entryRobotTick = self.networkTable.getEntry(key="robotTick")
+            self.entryRobotTick: NetworkTableEntry = self.networkTable.getEntry(key="robotTick")
             self.entryRobotTick.setInteger(value=0)
-            self.previousRobotTick = self.entryRobotTick.getInteger(defaultValue=0)
-            self.lastRobotTickDetection = time.time()
+            self.previousRobotTick: int = self.entryRobotTick.getInteger(defaultValue=0)
+            self.lastRobotTickDetection: float = time.time()
 
             # Tracks update ticks
-            self.entryDashboardTick = self.networkTable.getEntry(key="dashboardTick")
+            self.entryDashboardTick: NetworkTableEntry = self.networkTable.getEntry(key="dashboardTick")
             self.entryDashboardTick.setInteger(value=0)
             self.dashboardTick = 0
 
@@ -75,7 +69,7 @@ class Comms:
         
     def getIsConnected(self) -> bool:
         if COMMS:
-            fetch = self.entryRobotTick.getInteger(defaultValue=0)
+            fetch: int = self.entryRobotTick.getInteger(defaultValue=0)
             if fetch != self.previousRobotTick:
                 self.lastRobotTickDetection = time.time()
                 self.previousRobotTick = fetch
