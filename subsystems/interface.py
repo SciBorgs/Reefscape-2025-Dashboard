@@ -26,8 +26,7 @@ class Interface:
         '''Interactable Visual Objects'''
         '''
         Code:
-        a - example A
-        b - example B
+        a - entire screen
         '''
         self.ivos = {
             -999 : [" ", DummyVisualObject("dummy", (0,0))], # used for not interacting with anything
@@ -152,7 +151,7 @@ class Interface:
             self.ivos[-49][1].setAlliance(alliance)
             self.alliance = alliance
             self.needUpdate = True
-        if alliance == "disconnected":
+        if alliance in STIMULATION:
             self.needUpdate = True
 
 
