@@ -1,4 +1,7 @@
 # Reefscape 2025 - 1155 Dashboard
+
+![](</image.png>)
+
 An operator dashboard to control bits of FRC Team 1155's 2025 robot.
 
 Big thanks to [wpilibsuite/StandaloneAppSamples](https://github.com/wpilibsuite/StandaloneAppSamples/tree/main) and [this CD post](https://www.chiefdelphi.com/t/problems-with-importing-wpilib-java/424464) for being starting points for the start of research for the Java version!
