@@ -1,6 +1,6 @@
 '''This file contains classes all about the visual objects the user sees'''
 
-import math, time
+import time
 from subsystems.lib.render import placeOver
 from subsystems.lib.fancy import *
 from settings import *
