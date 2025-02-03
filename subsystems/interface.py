@@ -1,5 +1,6 @@
 '''This file is all about managing what the user sees'''
 
+from doctest import debug
 from settings import *
 from PIL import ImageTk, Image
 from tkinter import filedialog
@@ -12,7 +13,7 @@ from subsystems.lib.counter import Counter
 from subsystems.comms import *
 
 class Interface:
-    def __init__(self):
+    def __init__(self) -> None:
         self.mx = 0
         self.my = 0
         self.prevmx = 0
@@ -23,10 +24,15 @@ class Interface:
         self.ticks = 0
         self.c = Counter()
         self.comms = Comms()
+        self.debugMode = True
         '''Interactable Visual Objects'''
         '''
         Code:
-        a - entire screen
+            a - entire screen
+            b - branch
+            l - level
+            s - processor
+            g - goal
         '''
         self.ivos = {
             -999 : [" ", DummyVisualObject("dummy", (0,0))], # used for not interacting with anything
@@ -35,16 +41,16 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # Example Usage
-            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2-55), "GO")],
-            -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+55), "PS")],
+            -50 : ["g", BranchButtonVisualObject("go", (111, 865/2+55), "GO")],
+            -49 : ["s", BranchButtonVisualObject("processor", (111, 865/2-55), "PS")],
         }
 
         for i in range(12):
             id = "ABCDEFGHIJKL"[i]
-            self.ivos[i] = ["a", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
+            self.ivos[i] = ["b", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
 
         for i in range(1,5):
-            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1389, (3-i-0.5)*(110)+865/2),"L" + str(i))]
+            self.ivos[i+50] = ["l",BranchButtonVisualObject("Level " + str(i),(1389, (3-i-0.5)*(110)+865/2),"L" + str(i))]
 
 
         '''Control'''
@@ -62,12 +68,14 @@ class Interface:
         '''DASHBOARD STUFF'''
         self.selectedBranch = " "
         self.selectedLevel = 0
+        self.processor = False
         self.alliance = ""
         self.needUpdate = True
-        pass
 
-    def tick(self,mx,my,mPressed,fps):
-        '''Entire Screen: `(0,0) to (1499, 864)`: size `(1500, 865)`'''
+    def tick(self,mx,my,mPressed,fps) -> None:
+        ''' Called periodically to update the program '''
+
+        ''' Entire Screen: `(0,0) to (1499, 864)`: size `(1500, 865)` '''
         self.prevmx = self.mx
         self.prevmy = self.my
         self.mx = mx if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.mx 
@@ -143,12 +151,11 @@ class Interface:
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
         if self.alliance != alliance:
-            for i in range(0,11+1):
-                self.ivos[i][1].setAlliance(alliance)
-            for i in range(51,54+1):
-                self.ivos[i][1].setAlliance(alliance)
-            self.ivos[-50][1].setAlliance(alliance)
-            self.ivos[-49][1].setAlliance(alliance)
+            for id in self.ivos:
+                if self.ivos[id][0] == "b": self.ivos[id][1].setAlliance(alliance)
+                elif self.ivos[id][0] == "l": self.ivos[id][1].setAlliance(alliance)
+                elif self.ivos[id][0] == "s": self.ivos[id][1].setAlliance(alliance)
+                else: pass
             self.alliance = alliance
             self.needUpdate = True
         if alliance in STIMULATION:
@@ -156,51 +163,51 @@ class Interface:
 
 
 
-    def process(self, im):
+    def process(self, im) -> Image:
+        ''' Called periodically to update the screen '''
         img = im.copy()
 
-        placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
-        # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
-        # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
-        # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
-        # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
+        if self.debugMode:
+            placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
+            placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
+            placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
+            placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
+            placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
+            placeOver(img, displayText(f"Selected: {self.selectedBranch}{" " if self.selectedLevel==0 else self.selectedLevel}", "m"), (20,150))
+            placeOver(img, displayText(f"Processor: {self.processor}", "m"), (20,120))
 
-        placeOver(img, displayText(f"Selected: {self.selectedBranch}{" " if self.selectedLevel==0 else self.selectedLevel}", "m"), (20,55))
         if not(COMMS):
             placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,90))
 
-        connected = self.comms.getIsConnected()
-        placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,775))
-        if connected:
-            placeOver(img, displayText("Comms: Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,800))
-            placeOver(img, displayText(f"Comms: Nearest: {self.comms.getNearest()}", "m"), (20,825))
-        else:
-            placeOver(img, displayText(f"Comms: Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
-            placeOver(img, displayText(f"Comms: Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
+        if self.comms.getIsConnected():
+            placeOver(img, displayText("Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,775))
+            placeOver(img, displayText(f"Nearest: {self.comms.getNearest()}", "m"), (20,800))
+            placeOver(img, displayText(f"Connection: {True}", "m", colorTXT=(100,255,100,255)), (20,750))
+        
+        if not self.comms.getIsConnected():
+            placeOver(img, displayText(f"Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,775))
+            placeOver(img, displayText(f"Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
+            placeOver(img, displayText(f"Connection: {False}", "m", (255,100,100,255)), (20,750))
 
         if self.alliance in STIMULATION:
-            subway = getFrameFromGIF(SUBWAY_GIF, time.time()*16)
-            placeOver(img, subway, ( 230,  10))
-            placeOver(img, subway, (1130,  10))
-            placeOver(img, subway, ( 230, 615))
-            placeOver(img, subway, (1130, 615))
-            placeOver(img, subway, ( 670, 300))
+            frame = getFrameFromGIF(SUBWAY_GIF, time.time()*16)
+            placeOver(img, frame, ( 230,  10))
+            placeOver(img, frame, (1130,  10))
+            placeOver(img, frame, ( 230, 615))
+            placeOver(img, frame, (1130, 615))
+            placeOver(img, frame, ( 670, 300))
 
         for id in self.ivos:
-            if self.ivos[id][0] == "a":
-                if 0 <= id <= 11:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.selectedBranch))
-                elif 51 <= id <= 54:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.selectedLevel+50)
-                elif id == -49:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.selectedBranch=="processor")
-                else:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
+            if self.ivos[id][0] == "b": 
+                self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.selectedBranch)) 
+            elif self.ivos[id][0] == "l": 
+                self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.selectedLevel+50)
+            elif self.ivos[id][0] == "s": 
+                self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.selectedBranch=="processor")
+            else: self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
 
-        return img    
-
-    def saveState(self):
-        pass
-
-    def close(self):
-        pass
+        return img
+    
+    def toggleDebugMode() -> None:
+        ''' Toggle Debug Mode '''
+        debugMode = not(debugMode)
