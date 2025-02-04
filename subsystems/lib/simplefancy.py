@@ -23,9 +23,10 @@ def generateColorBox(size:list|tuple = (25,25),color:list|tuple = (255,255,255,2
     array[:, :] = color
     return arrayToImage(array)
 
-def generateBorderBox(size:list|tuple = (25,25), outlineW:int = 1, color:list|tuple = (255,255,255,255)):
+def generateBorderBox(size:list|tuple = (25,25), outlineW:int = 1, color:list|tuple = (255,255,255,255), innerfill:list|tuple = (0,0,0,0)):
     '''Generates a bordered box with a transparent inside, with transparent space of (size), and an (outlineW) px thick outline of (color) color surrounding it'''
     array = numpy.zeros((size[1]+2*outlineW, size[0]+2*outlineW, 4), dtype=numpy.uint8)
+    array[:,:,:] = innerfill
     array[:outlineW, :, :] = color
     array[-outlineW:, :, :] = color
     array[:, :outlineW, :] = color

@@ -35,16 +35,21 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # Example Usage
-            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2-55), "GO")],
-            -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+55), "PS")],
+            -51 : ["a", BranchButtonVisualObject("reset", (111, 865/2-110), "RS")],
+            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
+            -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
         }
 
         for i in range(12):
             id = "ABCDEFGHIJKL"[i]
             self.ivos[i] = ["a", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
 
-        for i in range(1,5):
+        for i in range(1,4+1):
             self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1389, (3-i-0.5)*(110)+865/2),"L" + str(i))]
+        
+        algae = ["AB", "CD", "FE", "HG", "JI", "KL"]
+        for i in range(6):
+            self.ivos[i+70] = ["a",BranchButtonVisualObject("Algae " + algae[i],(round(math.cos(math.pi * i / 3 - 6 * math.pi /12) * 145) + 1500/2, round(math.sin(math.pi * i / 3 - 6 * math.pi /12) * -145) + 865/2), algae[i])]
 
 
         '''Control'''
@@ -60,8 +65,6 @@ class Interface:
         self.sliders = []
         self.slidersData = []
         '''DASHBOARD STUFF'''
-        self.selectedBranch = " "
-        self.selectedLevel = 0
         self.alliance = ""
         self.needUpdate = True
         pass
@@ -114,31 +117,18 @@ class Interface:
             self.needUpdate = True
         if self.mRising:
             if 0 <= self.interacting <= 11:
-                new = "ABCDEFGHIJKL"[self.interacting]
-                if self.selectedBranch != new: self.selectedBranch = new
-                else: self.selectedBranch = " "
+                self.comms.setSelectedBranch("ABCDEFGHIJKL"[self.interacting])
             elif 51 <= self.interacting <= 54:
-                new = self.interacting - 50
-                if self.selectedLevel != new: 
-                    self.selectedLevel = new
-                    if self.selectedBranch == "processor": self.selectedBranch = " "
-                else: 
-                    self.selectedLevel = 0
-            elif self.interacting == -49:
-                self.selectedBranch = "processor"
-                self.selectedLevel = 0
+                self.comms.setSelectedLevel(self.interacting - 50)
+            elif 70 <= self.interacting <= 75:
+                self.comms.setSelectedAlgae(self.interacting - 70)
+            elif self.interacting == -51:
+                self.comms.mode = "reset"
+                self.comms.transmit()
             elif self.interacting == -50:
-                if self.selectedBranch == "processor":
-                    self.comms.setProcessor(True)
-                    self.selectedBranch = " "
-                    self.selectedLevel = 0
-                elif self.selectedBranch != " " and self.selectedLevel != 0:
-                    self.comms.setProcessor(False)
-                    self.comms.setBranch(self.selectedBranch)
-                    self.comms.setLevel(self.selectedLevel)
-                    self.selectedBranch = " "
-                    self.selectedLevel = 0
-                else: pass
+                self.comms.transmit()
+            elif self.interacting == -49:
+                self.comms.setProcessor()
             else: pass
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
@@ -147,6 +137,9 @@ class Interface:
                 self.ivos[i][1].setAlliance(alliance)
             for i in range(51,54+1):
                 self.ivos[i][1].setAlliance(alliance)
+            for i in range(70, 76):
+                self.ivos[i][1].setAlliance(alliance)
+            self.ivos[-51][1].setAlliance(alliance)
             self.ivos[-50][1].setAlliance(alliance)
             self.ivos[-49][1].setAlliance(alliance)
             self.alliance = alliance
@@ -159,13 +152,13 @@ class Interface:
     def process(self, im):
         img = im.copy()
 
-        placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
+        # placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
         # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
         # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
         # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
         # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
-        placeOver(img, displayText(f"Selected: {self.selectedBranch}{" " if self.selectedLevel==0 else self.selectedLevel}", "m"), (20,55))
+        placeOver(img, displayText(f"Selected: {self.comms.selectedBranch}{" " if self.comms.selectedLevel==0 else self.comms.selectedLevel}", "m"), (20,55))
         if not(COMMS):
             placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,90))
 
@@ -189,11 +182,13 @@ class Interface:
         for id in self.ivos:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.selectedBranch))
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.comms.selectedBranch))
                 elif 51 <= id <= 54:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.selectedLevel+50)
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.comms.selectedLevel+50)
                 elif id == -49:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.selectedBranch=="processor")
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.comms.selectedProcessor)
+                elif 70 <= id <= 75:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.comms.selectedAlgae+70)
                 else:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
 

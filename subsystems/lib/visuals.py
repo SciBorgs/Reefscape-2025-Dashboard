@@ -71,16 +71,18 @@ class BranchButtonVisualObject(VisualObject):
         self.lastInteraction = time.time()
 
         overlayText = displayText(str(branch), "l", bold = True)
-        self.imgDisconnected = generateBorderBox((94,94), 3, (50,50,50,255))
+        effect = generateColorBox((94,94), (0,0,0,100))
+
+        self.imgDisconnected = generateBorderBox((94,94), 3, (50,50,50,255), (0,0,0,100))
         placeOver(self.imgDisconnected, overlayText, (50, 50), True)
 
-        self.imgRed = generateBorderBox((94,94), 3, (255,0,0,255))
+        self.imgRed = generateBorderBox((94,94), 3, (255,0,0,255), (100,0,0,100))
         placeOver(self.imgRed, overlayText, (50, 50), True)
 
-        self.imgBlue = generateBorderBox((94,94), 3, (0,0,255,255))
+        self.imgBlue = generateBorderBox((94,94), 3, (0,0,255,255), (0,0,100,100))
         placeOver(self.imgBlue, overlayText, (50, 50), True)
         
-        self.imgActive = generateBorderBox((94,94), 3, (254,221,16,255))
+        self.imgActive = generateBorderBox((94,94), 3, (254,221,16,255), (100,50,0,100))
         placeOver(self.imgActive, overlayText, (50, 50), True)
         
         self.img = self.imgDisconnected
