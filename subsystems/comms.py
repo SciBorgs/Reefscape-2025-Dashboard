@@ -42,7 +42,7 @@ class Comms:
             self.entryScoringProcessor = self.networkTable.getEntry(key="processor")
             self.entryScoringProcessor.setBoolean(value=False)
             
-            # Entry for whether to score processor or not
+            # Entry for the target algae to obtain
             self.entryTargetAlgae = self.networkTable.getEntry(key="algae")
             self.entryTargetAlgae.setInteger(value=-1)
 
@@ -56,8 +56,11 @@ class Comms:
             self.entryBlueAlliance = self.networkTable.getEntry(key="blueAlliance")
             self.entryBlueAlliance.setBoolean(value=True)
 
+            # Entry for the current match
+            self.entryMatch = self.networkTable.getEntry(key="match")
 
-            '''add match things here'''
+            # Entry for the current match time
+            self.entryMatchTime = self.networkTable.getEntry(key="matchTime")
 
             # Tracks update ticks
             self.entryDashboardTick = self.networkTable.getEntry(key="dashboardTick")
@@ -79,6 +82,14 @@ class Comms:
     def getNearest(self) -> str:
         if COMMS: return self.entryClosestBranch.getString(defaultValue="")
         else: return ""
+    
+    def getMatch(self) -> str:
+        if COMMS: return self.entryMatch.getString(defaultValue="@ None / M0")
+        else: return "@ None / M0"
+    
+    def getMatchTime(self) -> float:
+        if COMMS: return self.entryMatchTime.getDouble(defaultValue=0.0)
+        else: return 0.0
         
     def getIsConnected(self) -> bool:
         if COMMS:

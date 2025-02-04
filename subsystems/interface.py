@@ -152,7 +152,7 @@ class Interface:
     def process(self, im):
         img = im.copy()
 
-        # placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
+        placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
         # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
         # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
         # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
@@ -160,7 +160,10 @@ class Interface:
 
         placeOver(img, displayText(f"Selected: {self.comms.selectedBranch}{" " if self.comms.selectedLevel==0 else self.comms.selectedLevel}", "m"), (20,55))
         if not(COMMS):
-            placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,90))
+            placeOver(img, displayText(f"Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,160))
+
+        placeOver(img, displayText(f"FRC 1155 {self.comms.getMatch()}", "m", colorTXT=(255,255,12,255)), (20,90))
+        placeOver(img, displayText(f"Time Left: {round(self.comms.getMatchTime()*10)/10} s", "m", colorTXT=(255,255,12,255)), (20,125))
 
         connected = self.comms.getIsConnected()
         placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,775))
