@@ -3,12 +3,44 @@
  */
 package org.sciborgs1155.dashboard;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+/** Main class for starting the app. */
+public class App extends Application {
+    // TODO: JUnit no worky :(
+
+    /** Starts the window(given as a {@link Stage}) */
+    @Override
+    public void start(Stage stage) {
+        Button button = new Button("Yippee!");
+
+        button.setOnAction((ActionEvent event) -> {
+            System.out.println("YIPPEE!");
+            event.consume();
+        });
+        
+        Scene scene = new Scene(new StackPane(button), 640, 480);
+
+        stage.setScene(scene);
+
+        stage.setTitle("RafeScepe");
+        stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("Icon.png")));
+        stage.show();
     }
 
+    /**
+     * Runs the program.
+     * 
+     * @param args : Arguments to run the program with.
+     */
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        launch();
     }
+
 }
