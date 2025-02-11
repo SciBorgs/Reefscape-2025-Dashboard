@@ -13,13 +13,12 @@ import javafx.stage.Stage;
 
 /** Main class for starting the app. */
 public class App extends Application {
-    // TODO: JUnit no worky :(
-
     /** Starts the window(given as a {@link Stage}) */
     @Override
     public void start(Stage stage) {
         Button button = new Button("Yippee!");
 
+        Network.start();
         button.setOnAction((ActionEvent event) -> {
             System.out.println("YIPPEE!");
             event.consume();
@@ -29,7 +28,7 @@ public class App extends Application {
 
         stage.setScene(scene);
 
-        stage.setTitle("RafeScepe");
+        stage.setTitle("SciBoard");
         stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("Icon.png")));
         stage.show();
     }
