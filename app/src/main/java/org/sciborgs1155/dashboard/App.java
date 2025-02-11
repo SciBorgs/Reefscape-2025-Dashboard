@@ -3,6 +3,8 @@
  */
 package org.sciborgs1155.dashboard;
 
+import org.sciborgs1155.dashboard.Network.Server;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -19,8 +21,10 @@ public class App extends Application {
         Button button = new Button("Yippee!");
 
         Network.start();
+        Network.connect(Server.SIMULATION);
+
         button.setOnAction((ActionEvent event) -> {
-            System.out.println("YIPPEE!");
+            button.setText(Integer.toString(Network.getTick()));
             event.consume();
         });
         
