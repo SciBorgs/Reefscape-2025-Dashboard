@@ -30,7 +30,7 @@ public class Network {
         ROBOT;
     }
 
-    /** Extracts and loads JNI's, and starts Network client. */
+    /** Extracts and loads JNI's. */
     public static void start() {
         try {
             NetworkTablesJNI.Helper.setExtractOnStaticLoad(false);
@@ -45,7 +45,7 @@ public class Network {
         }
     }
 
-    /** Extracts and loads JNI's, and starts Network client. */
+    /** Starts Network client and connects to the server. */
     public static void connect(Server server) {
         try {
             networkTables = NetworkTableInstance.getDefault();

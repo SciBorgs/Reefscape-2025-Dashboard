@@ -11,6 +11,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id "edu.wpi.first.GradleRIO" version "2025.2.1"
     id 'edu.wpi.first.WpilibTools' version '2.1.0'
+    id 'com.diffplug.spotless' version '7.0.2'
 }
 
 repositories {

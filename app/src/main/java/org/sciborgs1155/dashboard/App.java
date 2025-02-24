@@ -4,36 +4,46 @@
 package org.sciborgs1155.dashboard;
 
 import org.sciborgs1155.dashboard.Network.Server;
+import org.sciborgs1155.dashboard.TitleBar.TitleBar;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /** Main class for starting the app. */
 public class App extends Application {
-    /** Starts the window(given as a {@link Stage}) */
+    /** Starts the window(given as an {@link Stage}) */
     @Override
     public void start(Stage stage) {
-        Button button = new Button("Yippee!");
+        /** Removes the default title bar */
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setWidth(1280);
+        stage.setHeight(720);
+        stage.setTitle("SciBoard 2025");
+        stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("sciborgDisconnected.png")));
+        stage.setResizable(true);
+
+
+        final BorderPane borderPane = new BorderPane();
+        borderPane.setTop(new TitleBar(stage));
+        borderPane.setBackground(new Background(new BackgroundFill(Color.BLACK,new CornerRadii(18,false), Insets.EMPTY)));
+
+        final Scene mainScene = new Scene(borderPane,1280, 720);
+        mainScene.setFill(Color.TRANSPARENT);
 
         Network.start();
         Network.connect(Server.SIMULATION);
 
-        button.setOnAction((ActionEvent event) -> {
-            button.setText(Integer.toString(Network.getTick()));
-            event.consume();
-        });
-        
-        Scene scene = new Scene(new StackPane(button), 640, 480);
-
-        stage.setScene(scene);
-
-        stage.setTitle("SciBoard");
-        stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("Icon.png")));
+        stage.setScene(mainScene);
         stage.show();
     }
 
