@@ -93,7 +93,7 @@ class Comms:
         if COMMS: return self.entryMatchTime.getDouble(defaultValue=0.0)
         else: return 0.0
         
-    def getNewRequest(self) -> str:
+    def getRequest(self) -> str:
         if COMMS: return self.entryRequest.getString(defaultValue="")
         else: return False
 

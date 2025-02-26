@@ -169,13 +169,13 @@ class Interface:
         placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,750))
         if connected:
             placeOver(img, displayText("Comms: Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,775))
-            placeOver(img, displayText(f"Comms: Nearest: {self.comms.getNearest()}", "m"), (20,800))
-            placeOver(img, displayText("Comms: New Request: {}".format("Sent" if self.comms.getNewRequest() else "Idle"), "m", colorTXT=(100,255,100,255) if self.comms.getNewRequest() else (100,100,100,255)), (20,825))
+            placeOver(img, displayText("Comms: Nearest: {}".format(self.comms.getNearest()), "m"), (20,800))
+            placeOver(img, displayText("Comms: Request: {}".format(self.comms.getRequest() if self.comms.getRequest()!="" else "Idle"), "m", colorTXT=(100,255,100,255) if self.comms.getRequest()!="" else (100,100,100,255)), (20,825))
             
         else:
             placeOver(img, displayText(f"Comms: Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,775))
             placeOver(img, displayText(f"Comms: Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
-            placeOver(img, displayText(f"Comms: New Request: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
+            placeOver(img, displayText(f"Comms: Request: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
 
         if self.alliance in STIMULATION:
             subway = getFrameFromGIF(SUBWAY_GIF, time.time()*16)
