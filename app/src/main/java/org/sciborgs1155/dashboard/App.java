@@ -3,9 +3,6 @@
  */
 package org.sciborgs1155.dashboard;
 
-import org.sciborgs1155.dashboard.Network.Server;
-import org.sciborgs1155.dashboard.TitleBar.TitleBar;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,46 +11,57 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.sciborgs1155.dashboard.Network.Server;
+import org.sciborgs1155.dashboard.TitleBar.TitleBar;
 
 /** Main class for starting the app. */
 public class App extends Application {
-    /** Starts the window(given as an {@link Stage}) */
-    @Override
-    public void start(Stage stage) {
-        /** Removes the default title bar */
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setWidth(1280);
-        stage.setHeight(720);
-        stage.setTitle("SciBoard 2025");
-        stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("sciborgDisconnected.png")));
-        stage.setResizable(true);
+  /** Starts the window(given as an {@link Stage}) */
+  @Override
+  public void start(Stage stage) {
+    /** Removes the default title bar */
+    stage.initStyle(StageStyle.UNDECORATED);
+    stage.initStyle(StageStyle.TRANSPARENT);
 
+    stage.setWidth(1280);
+    stage.setHeight(720);
+    stage.setResizable(true);
 
-        final BorderPane borderPane = new BorderPane();
-        borderPane.setTop(new TitleBar(stage));
-        borderPane.setBackground(new Background(new BackgroundFill(Color.BLACK,new CornerRadii(18,false), Insets.EMPTY)));
+    stage.setTitle("SciBoard 2025");
+    stage
+        .getIcons()
+        .add(
+            new Image(
+                ClassLoader.getSystemResourceAsStream("SciborgIcons/sciborgDisconnected.png")));
 
-        final Scene mainScene = new Scene(borderPane,1280, 720);
-        mainScene.setFill(Color.TRANSPARENT);
+    final BorderPane mainPane = new BorderPane();
+    mainPane.setBackground(
+        new Background(new BackgroundFill(Color.BLACK, new CornerRadii(18, false), Insets.EMPTY)));
 
-        Network.start();
-        Network.connect(Server.SIMULATION);
+    mainPane.setTop(new TitleBar(stage));
+    mainPane.setCenter(new Pane());
 
-        stage.setScene(mainScene);
-        stage.show();
-    }
+    final Scene mainScene = new Scene(mainPane, 1280, 720);
+    mainScene.setFill(Color.TRANSPARENT);
 
-    /**
-     * Runs the program.
-     * 
-     * @param args : Arguments to run the program with.
-     */
-    public static void main(String[] args) {
-        launch();
-    }
+    stage.setScene(mainScene);
+    stage.show();
 
+    Network.load();
+    Network.connect(Server.SIMULATION);
+    Network.startNetworkThread(stage);
+  }
+
+  /**
+   * Runs the program.
+   *
+   * @param args : Arguments to run the program with.
+   */
+  public static void main(String[] args) {
+    launch();
+  }
 }
