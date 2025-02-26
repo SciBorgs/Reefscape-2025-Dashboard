@@ -52,6 +52,10 @@ class Comms:
             self.previousRobotTick = self.entryRobotTick.getInteger(defaultValue=0)
             self.lastRobotTickDetection = time.time()
 
+            # Entry for new requests to the robot
+            self.entryNewRequest = self.networkTable.getEntry(key="newRequest")
+            self.entryNewRequest.setBoolean(value=False)
+
             # Entry for the robot's alliance
             self.entryBlueAlliance = self.networkTable.getEntry(key="blueAlliance")
             self.entryBlueAlliance.setBoolean(value=True)
@@ -76,8 +80,6 @@ class Comms:
         if COMMS:
             self.dashboardTick += 1
             self.entryDashboardTick.setInteger(value=self.dashboardTick)
-        
-
 
     def getNearest(self) -> str:
         if COMMS: return self.entryClosestBranch.getString(defaultValue="")
@@ -91,6 +93,10 @@ class Comms:
         if COMMS: return self.entryMatchTime.getDouble(defaultValue=0.0)
         else: return 0.0
         
+    def getNewRequest(self) -> str:
+        if COMMS: return self.entryNewRequest.getString(defaultValue="")
+        else: return False
+
     def getIsConnected(self) -> bool:
         if COMMS:
             fetch = self.entryRobotTick.getInteger(defaultValue=0)
@@ -146,24 +152,32 @@ class Comms:
                     self.entryTargetLevel.setInteger(value=self.selectedLevel)
                     self.entryScoringProcessor.setBoolean(value=False)
                     self.entryTargetAlgae.setInteger(value=-1)
+                    self.entryNewRequest.setString(value="reef")
+                    self.lastNewRequest = time.time()
                     self.resetDashboard()
             elif self.mode == "processor":
                 self.entryTargetBranch.setString(value=" ")
                 self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=True)
                 self.entryTargetAlgae.setInteger(value=-1)
+                self.entryNewRequest.setString(value="processor")
+                self.lastNewRequest = time.time()
                 self.resetDashboard()
             elif self.mode == "algae":
                 self.entryTargetBranch.setString(value=" ")
                 self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=False)
                 self.entryTargetAlgae.setInteger(value=self.selectedAlgae)
+                self.entryNewRequest.setString(value="algae")
+                self.lastNewRequest = time.time()
                 self.resetDashboard()
             elif self.mode == "reset":
                 self.entryTargetBranch.setString(value=" ")
                 self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=False)
                 self.entryTargetAlgae.setInteger(value=-1)
+                self.entryNewRequest.setString(value="")
+                self.lastNewRequest = time.time()
                 self.resetDashboard()
                 
             else: pass
