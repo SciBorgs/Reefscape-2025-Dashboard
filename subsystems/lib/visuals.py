@@ -6,6 +6,10 @@ from subsystems.lib.fancy import *
 from settings import *
 
 '''Point Stuff'''
+def addP(coord1: tuple|list, coord2: tuple|list):
+    '''Adds the x and y coordinates of 2 points given in (x,y) format'''
+    return (coord1[0]+coord2[0],coord1[1]+coord2[1])
+
 def subtractP(coord1: tuple|list, coord2: tuple|list):
     '''Subtracts (x1,y1) by (x2,y2) given in (x,y) format'''
     return (coord1[0]-coord2[0],coord1[1]-coord2[1])
@@ -96,3 +100,21 @@ class BranchButtonVisualObject(VisualObject):
         else: self.img = self.imgDisconnected
     def updatePos(self, rmx, rmy):
         pass
+
+class VerticalSliderVisualObject(VisualObject):
+    '''A slider!!! No way!!! (vertical) modified'''
+    def __init__(self, name, pos:tuple|list=(random.randrange(0,20), random.randrange(0,20)), limitY = [0,100]):
+        self.type = "orb"
+        self.name = name
+        self.lastInteraction = time.time()
+        self.positionO = RectangularPositionalBox((20,20), subtractP(pos, (10,10)))
+        self.positionO.setPosition(pos)
+        self.limitY = limitY
+
+        self.imgActive = generateColorBox((20,20), (100,100,100,255))
+    def tick(self, img, visualactive, active):
+        if active: self.lastInteraction = time.time()
+        placeOver(img, self.imgActive if visualactive else self.imgActive, self.positionO.getPosition(), True)
+        placeOver(img, displayText(self.name, "s"), self.positionO.getPosition(), True)
+    def updatePos(self, rmx, rmy):
+        self.positionO.setY(max(self.limitY[0], min(rmy, self.limitY[1])))

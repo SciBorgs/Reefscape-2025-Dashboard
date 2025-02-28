@@ -34,10 +34,11 @@ class Interface:
             -997 : [" ", DummyVisualObject("dummy", (0,0))], # used by keybinds
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
-            # Example Usage
             -51 : ["a", BranchButtonVisualObject("reset", (111, 865/2-110), "RS")],
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
+
+            -30 : ["a", VerticalSliderVisualObject("elevator", (175, 500))]
         }
 
         for i in range(12):
