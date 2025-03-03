@@ -38,7 +38,8 @@ class Interface:
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
-            -30 : ["a", VerticalSliderVisualObject("TARGET", (175, 500), [250,500])]
+            -30 : ["a", VerticalSliderVisualObject("GO", (1420, 500), [233,632])],
+            -29 : ["a", VerticalSliderVisualObject("NOW", (1580, 500), [233,632])],
         }
 
         for i in range(12):
@@ -46,7 +47,7 @@ class Interface:
             self.ivos[i] = ["a", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
 
         for i in range(1,4+1):
-            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1389, (3-i-0.5)*(110)+865/2),"L" + str(i))]
+            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1809, (3-i-0.5)*(110)+865/2),"L" + str(i))]
         
         algae = ["AB", "CD", "FE", "HG", "JI", "KL"]
         for i in range(6):
@@ -68,18 +69,19 @@ class Interface:
         '''DASHBOARD STUFF'''
         self.alliance = ""
         self.needUpdate = True
+        self.lastElevatorPos = self.comms.getCurrentElevator()
         pass
 
     def tick(self,mx,my,mPressed,fps):
-        '''Entire Screen: `(0,0) to (1499, 864)`: size `(1500, 865)`'''
+        '''Entire Screen: `(0,0) to (1919, 864)`: size `(1920, 865)`'''
         self.prevmx = self.mx
         self.prevmy = self.my
-        self.mx = mx if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.mx 
-        self.my = my if (0<=mx and mx<=1499) and (0<=my and my<=864) else self.my
+        self.mx = mx if (0<=mx and mx<=1919) and (0<=my and my<=864) else self.mx 
+        self.my = my if (0<=mx and mx<=1919) and (0<=my and my<=864) else self.my
 
         if TOUCHSCREEN:
             self.mRising = False
-            if (abs(self.prevmx-self.mx)+abs(self.prevmy-self.my) > 0 and (not(self.mPressed))):
+            if (abs(self.prevmx-self.mx)+abs(self.prevmy-self.my) > 0 and (not(mPressed > 0))):
                 self.lastTouchScreenPress = self.ticks
                 self.mPressed = True
                 self.mRising = True
@@ -103,7 +105,7 @@ class Interface:
         if self.interacting == -999 and self.mPressed and self.mRising:
             processed = False
             for id in self.ivos:
-                if self.ivos[id][1].getInteractable(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1]):
+                if self.ivos[id][1].getInteractable(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1]) and not(id in EXCLUDE):
                     self.interacting = id
                     processed = True
                     break
@@ -125,12 +127,22 @@ class Interface:
                 self.comms.setSelectedAlgae(self.interacting - 70)
             elif self.interacting == -51:
                 self.comms.mode = "reset"
+                self.ivos[-30][1].setPercent(self.comms.getCurrentElevator())
                 self.comms.transmit()
             elif self.interacting == -50:
                 self.comms.transmit()
             elif self.interacting == -49:
                 self.comms.setProcessor()
+            elif self.interacting == -30:
+                self.comms.setElevator(self.ivos[-30][1].getPercent())
             else: pass
+        if self.interacting == -30 or self.previousInteracting == -30:
+            self.comms.setElevator(self.ivos[-30][1].getPercent())
+            self.needUpdate = True
+        if self.lastElevatorPos != self.comms.getCurrentElevator():
+            self.lastElevatorPos = self.comms.getCurrentElevator()
+            self.ivos[-29][1].setPercent(self.lastElevatorPos)
+            self.needUpdate = True
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
         if self.alliance != alliance:
@@ -146,8 +158,6 @@ class Interface:
             self.alliance = alliance
             self.needUpdate = True
         if alliance in STIMULATION:
-            self.needUpdate = True
-        if self.interacting == -30 or self.previousInteracting == -30:
             self.needUpdate = True
 
 
@@ -171,8 +181,7 @@ class Interface:
         connected = self.comms.getIsConnected()
         placeOver(img, displayText(f"Comms: Connected: {connected}", "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,750))
         if connected:
-            placeOver(img, displayText("Comms: Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,775))
-            placeOver(img, displayText("Comms: Nearest: {}".format(self.comms.getNearest()), "m"), (20,800))
+            placeOver(img, displayText("Comms: Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,800))
             placeOver(img, displayText("Comms: Request: {}".format(self.comms.getRequest() if self.comms.getRequest()!="" else "Idle"), "m", colorTXT=(100,255,100,255) if self.comms.getRequest()!="" else (100,100,100,255)), (20,825))
             
         else:
@@ -198,6 +207,10 @@ class Interface:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.comms.selectedProcessor)
                 elif 70 <= id <= 75:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.comms.selectedAlgae+70)
+                elif id == -30:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.comms.mode == "elevator")
+                elif id == -29:
+                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
                 else:
                     self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
 

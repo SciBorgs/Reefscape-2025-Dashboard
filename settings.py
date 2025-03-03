@@ -6,7 +6,7 @@
 REAL = False
 
 # Changes the method of detection. When set to true, detects sudden mouse teleportation as a click.
-TOUCHSCREEN = False 
+TOUCHSCREEN = False
 
 # Controls communications. Disabling this disables all the dashboard's NetworkTables functions.
 COMMS = True
@@ -37,6 +37,7 @@ hexColorToRGBA = lambda hexcolor: tuple(int(hexcolor[i:i+2], 16) for i in (1, 3,
 BACKGROUND_COLOR = "#000000" #Background color
 BACKGROUND_COLOR_RGBA = hexColorToRGBA(BACKGROUND_COLOR)
 
+EXCLUDE = [-29]
 
 import os
 from PIL import ImageFont
@@ -67,5 +68,5 @@ SUBWAY_GIF = Image.open(os.path.join("resources", "subway guy.gif"))
 '''
 Region ID : Top Left, Bottom Right, Size, Keep In Relative Top Left, Keep In Relative Top Right
 '''
-SECTION_DATA = [(   0,   0),(1500, 865),(1500, 865),(   0,   0),(1500, 865)]
+SECTION_DATA = [(   0,   0),(1920, 865),(1920, 865),(   0,   0),(1920, 865)]
 SECTION_FRAME_INSTRUCTIONS = [[DISCONNECTED_ALLIANCE_BACKGROUND,(0,0)], [CONNECTED_ALLIANCE_BACKGROUND,(0,0)]]

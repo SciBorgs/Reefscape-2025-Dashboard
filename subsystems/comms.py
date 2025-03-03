@@ -46,6 +46,14 @@ class Comms:
             self.entryTargetAlgae = self.networkTable.getEntry(key="algae")
             self.entryTargetAlgae.setInteger(value=-1)
 
+            # Entry for the target elevator height
+            self.entryTargetElevator = self.networkTable.getEntry(key="targetElevator")
+            self.entryTargetElevator.setDouble(value=0)
+            
+            # Entry for the current elevator height
+            self.entryCurrentElevator = self.networkTable.getEntry(key="currentElevator")
+            self.entryCurrentElevator.getDouble(defaultValue=0)
+
             # Entry for the status of the connection
             self.entryRobotTick = self.networkTable.getEntry(key="robotTick")
             self.entryRobotTick.setInteger(value=0)
@@ -58,7 +66,7 @@ class Comms:
 
             # Entry for the robot's alliance
             self.entryBlueAlliance = self.networkTable.getEntry(key="blueAlliance")
-            self.entryBlueAlliance.setBoolean(value=True)
+            self.entryBlueAlliance.getBoolean(defaultValue="")
 
             # Entry for the current match
             self.entryMatch = self.networkTable.getEntry(key="match")
@@ -71,19 +79,15 @@ class Comms:
             self.entryDashboardTick.setInteger(value=0)
             self.dashboardTick = 0
 
-            # Entry for the closest branch
-            self.entryClosestBranch = self.networkTable.getEntry(key="closestBranch")
-            self.entryClosestBranch.setString(value="")
-
     def tick(self) -> None:
         '''Meant to be called periodically'''
         if COMMS:
             self.dashboardTick += 1
             self.entryDashboardTick.setInteger(value=self.dashboardTick)
 
-    def getNearest(self) -> str:
-        if COMMS: return self.entryClosestBranch.getString(defaultValue="")
-        else: return ""
+    def getCurrentElevator(self) -> float:
+        if COMMS: return self.entryCurrentElevator.getDouble(defaultValue=0.0)
+        else: return 0.0
     
     def getMatch(self) -> str:
         if COMMS: return self.entryMatch.getString(defaultValue="@ None / M0")
@@ -124,6 +128,7 @@ class Comms:
             self.selectedBranch = " "
         self.selectedAlgae = -1
         self.selectedProcessor = False
+        self.selectedElevator = 0
         self.mode = "reef"
 
     def setSelectedLevel(self, level:int) -> None:
@@ -133,6 +138,7 @@ class Comms:
             self.selectedLevel = -1
         self.selectedAlgae = -1
         self.selectedProcessor = False
+        self.selectedElevator = 0
         self.mode = "reef"
     
     def setProcessor(self) -> None:
@@ -140,19 +146,28 @@ class Comms:
         self.selectedBranch = " "
         self.selectedLevel = 0
         self.selectedAlgae = -1
+        self.selectedElevator = 0
         self.mode = "processor"
     
     def setSelectedAlgae(self, algae:int) -> None:
         self.selectedBranch = " "
         self.selectedLevel = 0
         self.selectedAlgae = algae
+        self.selectedElevator = 0
         self.mode = "algae"
+
+    def setElevator(self, elevator:float) -> None:
+        self.selectedBranch = " "
+        self.selectedLevel = 0
+        self.selectedAlgae = -1
+        self.selectedElevator = elevator
+        self.mode = "elevator"
 
     def transmitRequest(self, request:str) -> None:
         self.entryRequest.setString(value="")
         robotTick = self.getRobotTick()
         start = time.time()
-        while self.getRobotTick() == robotTick:
+        while abs(self.getRobotTick()-robotTick) < 10:
             if (time.time() - start) > 1:
                 break
         self.entryRequest.setString(value=request)
@@ -165,6 +180,7 @@ class Comms:
                     self.entryTargetLevel.setInteger(value=self.selectedLevel)
                     self.entryScoringProcessor.setBoolean(value=False)
                     self.entryTargetAlgae.setInteger(value=-1)
+                    self.entryTargetElevator.setDouble(value=0)
                     self.transmitRequest("reef")
                     self.lastNewRequest = time.time()
                     self.resetDashboard()
@@ -173,6 +189,7 @@ class Comms:
                 self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=True)
                 self.entryTargetAlgae.setInteger(value=-1)
+                self.entryTargetElevator.setDouble(value=0)
                 self.transmitRequest("processor")
                 self.lastNewRequest = time.time()
                 self.resetDashboard()
@@ -181,7 +198,17 @@ class Comms:
                 self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=False)
                 self.entryTargetAlgae.setInteger(value=self.selectedAlgae)
+                self.entryTargetElevator.setDouble(value=0)
                 self.transmitRequest("algae")
+                self.lastNewRequest = time.time()
+                self.resetDashboard()
+            elif self.mode == "elevator":
+                self.entryTargetBranch.setString(value=" ")
+                self.entryTargetLevel.setInteger(value=-1)
+                self.entryScoringProcessor.setBoolean(value=False)
+                self.entryTargetAlgae.setInteger(value=-1)
+                self.entryTargetElevator.setDouble(value=self.selectedElevator)
+                self.transmitRequest("elevator")
                 self.lastNewRequest = time.time()
                 self.resetDashboard()
             elif self.mode == "reset":
@@ -192,7 +219,6 @@ class Comms:
                 self.entryRequest.setString(value="")
                 self.lastNewRequest = time.time()
                 self.resetDashboard()
-                
             else: pass
     
     def resetDashboard(self) -> None:

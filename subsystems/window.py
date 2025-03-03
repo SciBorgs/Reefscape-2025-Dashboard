@@ -14,7 +14,7 @@ class Window:
         self.window = tk.Tk()
         self.window.grid()
         self.window.title("Reefscape 2025 - Dashboard")
-        self.window.geometry("1500x865")
+        self.window.geometry("1920x865")
         # self.window.wm_attributes('-alpha', 0.5)
         # self.window.minsize(500,500)
         # self.window.maxsize(500,500)

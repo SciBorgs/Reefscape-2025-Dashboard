@@ -108,7 +108,7 @@ class VerticalSliderVisualObject(VisualObject):
         self.name = name
         self.lastInteraction = time.time()
         self.origPos = (pos[0], limitY[0])
-        self.positionO = RectangularPositionalBox((50,50), self.origPos)
+        self.positionO = RectangularPositionalBox((100,100), subtractP(self.origPos, (25,25)))
         self.positionO.setPosition(self.origPos)
         self.limitY = limitY
 
@@ -131,3 +131,7 @@ class VerticalSliderVisualObject(VisualObject):
         placeOver(img, self.imgActive if visualactive else self.imgIdle, self.positionO.getPosition())
     def updatePos(self, rmx, rmy):
         self.positionO.setY(max(self.limitY[0], min(rmy, self.limitY[1])))
+    def setPercent(self, percent):
+        self.positionO.setY(max(self.limitY[0], min(self.limitY[0]+(1-percent)*(self.limitY[1]-self.limitY[0]), self.limitY[1])))
+    def getPercent(self):
+        return 1-((self.positionO.getY() - self.limitY[0])/(abs(self.limitY[1]-self.limitY[0])))
