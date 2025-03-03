@@ -38,7 +38,7 @@ class Interface:
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
-            -30 : ["a", VerticalSliderVisualObject("elevator", (175, 500))]
+            -30 : ["a", VerticalSliderVisualObject("TARGET", (175, 500), [250,500])]
         }
 
         for i in range(12):
@@ -146,6 +146,8 @@ class Interface:
             self.alliance = alliance
             self.needUpdate = True
         if alliance in STIMULATION:
+            self.needUpdate = True
+        if self.interacting == -30 or self.previousInteracting == -30:
             self.needUpdate = True
 
 

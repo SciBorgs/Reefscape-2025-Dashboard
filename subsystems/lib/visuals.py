@@ -104,17 +104,30 @@ class BranchButtonVisualObject(VisualObject):
 class VerticalSliderVisualObject(VisualObject):
     '''A slider!!! No way!!! (vertical) modified'''
     def __init__(self, name, pos:tuple|list=(random.randrange(0,20), random.randrange(0,20)), limitY = [0,100]):
-        self.type = "orb"
+        self.type = "slider"
         self.name = name
         self.lastInteraction = time.time()
-        self.positionO = RectangularPositionalBox((20,20), subtractP(pos, (10,10)))
-        self.positionO.setPosition(pos)
+        self.origPos = (pos[0], limitY[0])
+        self.positionO = RectangularPositionalBox((50,50), self.origPos)
+        self.positionO.setPosition(self.origPos)
         self.limitY = limitY
 
-        self.imgActive = generateColorBox((20,20), (100,100,100,255))
+        barColor = (150,150,150,255)
+        self.bar = generateColorBox((56,abs(limitY[1]-limitY[0])+58), (0,0,0,0))
+        spacer = generateColorBox((56,4), barColor)
+        placeOver(self.bar, spacer, (0,0))
+        placeOver(self.bar, spacer, (0,abs(limitY[1]-limitY[0])-6+58))
+        placeOver(self.bar,generateColorBox((4,abs(limitY[1]-limitY[0])+56), barColor), (26,0))
+
+        overlayText = displayText(self.name, "sm", colorTXT = (254,221,16,255), bold = 1)
+        self.imgIdle = generateBorderBox((50,50), 3, (150,150,150,255), (100,50,0,100))
+        placeOver(self.imgIdle, overlayText, (25,25), True)
+        self.imgActive = generateBorderBox((50,50), 3, (254,221,16,255), (100,50,0,100))
+        placeOver(self.imgActive, overlayText, (25,25), True)
+        
     def tick(self, img, visualactive, active):
         if active: self.lastInteraction = time.time()
-        placeOver(img, self.imgActive if visualactive else self.imgActive, self.positionO.getPosition(), True)
-        placeOver(img, displayText(self.name, "s"), self.positionO.getPosition(), True)
+        placeOver(img, self.bar, self.origPos)
+        placeOver(img, self.imgActive if visualactive else self.imgIdle, self.positionO.getPosition())
     def updatePos(self, rmx, rmy):
         self.positionO.setY(max(self.limitY[0], min(rmy, self.limitY[1])))
