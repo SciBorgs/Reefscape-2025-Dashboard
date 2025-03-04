@@ -91,7 +91,7 @@ class BranchButtonVisualObject(VisualObject):
         
         self.img = self.imgDisconnected
         self.positionO = RectangularPositionalBox((self.img.width,self.img.height), pos[0] - 50, pos[1] - 50)
-    def tick(self, img, visualactive, active):
+    def tick(self, img, active):
         if active: self.lastInteraction = time.time()
         placeOver(img, self.imgActive if active else self.img, self.positionO.getPosition(), False)
     def setAlliance(self, alliance):
@@ -125,10 +125,10 @@ class VerticalSliderVisualObject(VisualObject):
         self.imgActive = generateBorderBox((50,50), 3, (254,221,16,255), (100,50,0,100))
         placeOver(self.imgActive, overlayText, (25,25), True)
         
-    def tick(self, img, visualactive, active):
+    def tick(self, img, active):
         if active: self.lastInteraction = time.time()
         placeOver(img, self.bar, self.origPos)
-        placeOver(img, self.imgActive if visualactive else self.imgIdle, self.positionO.getPosition())
+        placeOver(img, self.imgActive if active else self.imgIdle, self.positionO.getPosition())
     def updatePos(self, rmx, rmy):
         self.positionO.setY(max(self.limitY[0], min(rmy, self.limitY[1])))
     def setPercent(self, percent):

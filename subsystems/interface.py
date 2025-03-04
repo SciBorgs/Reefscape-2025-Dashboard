@@ -38,8 +38,8 @@ class Interface:
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
-            -30 : ["a", VerticalSliderVisualObject("GO", (1420, 500), [233,632])],
-            -29 : ["a", VerticalSliderVisualObject("NOW", (1580, 500), [233,632])],
+            -30 : ["a", VerticalSliderVisualObject("GO", (1375, 500), [round(865/2-200)-30,round(865/2+200)-30])],
+            -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 500), [round(865/2-200)-30,round(865/2+200)-30])],
         }
 
         for i in range(12):
@@ -115,8 +115,9 @@ class Interface:
             self.ivos[self.interacting][1].keepInFrame(SECTION_DATA[3][0],SECTION_DATA[3][1],SECTION_DATA[4][0],SECTION_DATA[4][1])
 
         '''DASHBOARD THINGS'''
+        lastCommsMode = self.comms.mode
         self.comms.tick()
-        if self.mRising or self.interacting != self.previousInteracting:
+        if self.mRising or self.interacting != self.previousInteracting or self.interacting != -999 or self.previousInteracting != -999:
             self.needUpdate = True
         if self.mRising:
             if 0 <= self.interacting <= 11:
@@ -127,7 +128,6 @@ class Interface:
                 self.comms.setSelectedAlgae(self.interacting - 70)
             elif self.interacting == -51:
                 self.comms.mode = "reset"
-                self.ivos[-30][1].setPercent(self.comms.getCurrentElevator())
                 self.comms.transmit()
             elif self.interacting == -50:
                 self.comms.transmit()
@@ -143,6 +143,7 @@ class Interface:
             self.lastElevatorPos = self.comms.getCurrentElevator()
             self.ivos[-29][1].setPercent(self.lastElevatorPos)
             self.needUpdate = True
+        if lastCommsMode == "elevator" and self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
         if self.alliance != alliance:
@@ -175,8 +176,9 @@ class Interface:
         if not(COMMS):
             placeOver(img, displayText("Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,160))
 
-        placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "m", colorTXT=(255,255,12,255)), (20,90))
-        placeOver(img, displayText("Time Left: {} s".format(round(self.comms.getMatchTime()*10)/10), "m", colorTXT=(255,255,12,255)), (20,125))
+        placeOver(img, displayText("Mode: {}".format(self.comms.mode), "m", colorTXT=(255,255,255,255)), (20,90))
+        placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "m", colorTXT=(255,255,12,255)), (20,125))
+        placeOver(img, displayText("Time Left: {} s".format(round(self.comms.getMatchTime()*10)/10), "m", colorTXT=(255,255,12,255)), (20,160))
 
         connected = self.comms.getIsConnected()
         placeOver(img, displayText("Comms: Connected: {}".format(connected), "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,750))
@@ -200,19 +202,19 @@ class Interface:
         for id in self.ivos:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.comms.selectedBranch))
+                    self.ivos[id][1].tick(img, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.comms.selectedBranch))
                 elif 51 <= id <= 54:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.comms.selectedLevel+50)
+                    self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedLevel+50)
                 elif id == -49:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.comms.selectedProcessor)
+                    self.ivos[id][1].tick(img, self.interacting==id or self.comms.selectedProcessor)
                 elif 70 <= id <= 75:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or id==self.comms.selectedAlgae+70)
+                    self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedAlgae+70)
                 elif id == -30:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id or self.comms.mode == "elevator")
+                    self.ivos[id][1].tick(img, self.interacting==id or self.comms.mode == "elevator")
                 elif id == -29:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
+                    self.ivos[id][1].tick(img, self.interacting==id)
                 else:
-                    self.ivos[id][1].tick(img, self.interacting==id, self.interacting==id)
+                    self.ivos[id][1].tick(img, self.interacting==id)
 
         return img    
 
