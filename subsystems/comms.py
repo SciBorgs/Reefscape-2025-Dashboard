@@ -166,13 +166,10 @@ class Comms:
         self.entryRequest.setString(value="")
         robotTick = self.getRobotTick()
         start = time.time()
-        i = 0
         while abs(self.getRobotTick()-robotTick) < 10:
             time.sleep(0.05)
-            i += 1
             if abs(time.time() - start) > 0.2:
                 break
-        print(f"sus {i}")
         self.entryRequest.setString(value=request)
 
     def transmit(self) -> None:
