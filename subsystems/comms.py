@@ -11,6 +11,12 @@ from settings import *
 class Comms:
     '''Handles communication between the program and network tables'''
     def __init__(self) -> None:
+        # Selected stuff
+        self.mode = None
+        self.selectedBranch = " "
+        self.selectedLevel = -1
+        self.selectedAlgae = -1
+        self.selectedProcessor = False
         if COMMS:
             instance = ntcore.NetworkTableInstance.getDefault()
             instance.startClient4(identity="Dashboard")
@@ -22,13 +28,6 @@ class Comms:
                 instance.startDSClient()
             else:
                 instance.setServer(server_name="localhost")
-
-            # Selected stuff
-            self.mode = None
-            self.selectedBranch = " "
-            self.selectedLevel = -1
-            self.selectedAlgae = -1
-            self.selectedProcessor = False
 
             # Entry for the target branch to score on
             self.entryTargetBranch = self.networkTable.getEntry(key="branch")

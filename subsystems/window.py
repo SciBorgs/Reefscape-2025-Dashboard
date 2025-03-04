@@ -16,7 +16,7 @@ class Window:
         self.window.title("Reefscape 2025 - Dashboard")
         self.window.geometry("1920x865")
         # self.window.wm_attributes('-alpha', 0.5)
-        # self.window.minsize(500,500)
+        self.window.minsize(1920,865)
         # self.window.maxsize(500,500)
         self.window.configure(background=BACKGROUND_COLOR)
         self.fps = 0
