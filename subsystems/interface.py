@@ -115,7 +115,6 @@ class Interface:
             self.ivos[self.interacting][1].keepInFrame(SECTION_DATA[3][0],SECTION_DATA[3][1],SECTION_DATA[4][0],SECTION_DATA[4][1])
 
         '''DASHBOARD THINGS'''
-        lastCommsMode = self.comms.mode
         self.comms.tick()
         if self.mRising or self.interacting != self.previousInteracting or self.interacting != -999 or self.previousInteracting != -999:
             self.needUpdate = True
@@ -143,7 +142,7 @@ class Interface:
             self.lastElevatorPos = self.comms.getCurrentElevator()
             self.ivos[-29][1].setPercent(self.lastElevatorPos)
             self.needUpdate = True
-        if lastCommsMode == "elevator" and self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
+        if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
         if self.alliance != alliance:
