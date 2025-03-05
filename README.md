@@ -2,7 +2,7 @@
 
 ![](</image.png>)
 
-An operator dashboard to control bits of FRC Team 1155's 2025 robot.
+An operator dashboard to control bits of FRC Team 1155's 2025 robot, Sciduck!
 
 Big thanks to [wpilibsuite/StandaloneAppSamples](https://github.com/wpilibsuite/StandaloneAppSamples/tree/main) and [this CD post](https://www.chiefdelphi.com/t/problems-with-importing-wpilib-java/424464) for being starting points for the start of research for the Java version!
 
@@ -20,4 +20,4 @@ Run [`main.py`](</main.py>)! Visit [`settings.py`](</settings.py>) to modify set
 
 The code is centered around [`subsystems/`](</subsystems/>)! The NetworkTables system is in [`subsystems/comms.py`](</subsystems/comms.py>), while the interface is in [`interface.py`](</subsystems/interface.py>). The logic is also located in `interface.py`, under `tick()`. Checkout the [`resources/`](</resources/>) directory to view image files. 
 
-All other files contain the files needed to run IVO, and changes are not recommended to these.
+All other files, such as those under [`subsystems/lib/`](</subsystems/lib/>) contain the code needed to run IVO, and changes are not recommended to these.
