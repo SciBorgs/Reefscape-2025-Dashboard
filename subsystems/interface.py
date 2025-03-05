@@ -40,6 +40,11 @@ class Interface:
 
             -30 : ["a", VerticalSliderVisualObject("GO", (1375, 500), [round(865/2-200)-30,round(865/2+200)-30])],
             -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 500), [round(865/2-200)-30,round(865/2+200)-30])],
+
+            -20 : ["a", CameraVisualObject("FL", (1410, 445))],
+            -19 : ["a", CameraVisualObject("FR", (1520, 445))],
+            -18 : ["a", CameraVisualObject("BL", (1410, 555))],
+            -17 : ["a", CameraVisualObject("BR", (1520, 555))],
         }
 
         for i in range(12):

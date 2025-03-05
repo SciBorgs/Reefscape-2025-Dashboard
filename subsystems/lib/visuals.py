@@ -75,7 +75,6 @@ class BranchButtonVisualObject(VisualObject):
         self.lastInteraction = time.time()
 
         overlayText = displayText(str(branch), "l", bold = True)
-        effect = generateColorBox((94,94), (0,0,0,100))
 
         self.imgDisconnected = generateBorderBox((94,94), 3, (50,50,50,255), (0,0,0,100))
         placeOver(self.imgDisconnected, overlayText, (50, 50), True)
@@ -124,7 +123,7 @@ class VerticalSliderVisualObject(VisualObject):
         placeOver(self.imgIdle, overlayText, (25,25), True)
         self.imgActive = generateBorderBox((50,50), 3, (254,221,16,255), (100,50,0,100))
         placeOver(self.imgActive, overlayText, (25,25), True)
-        
+
     def tick(self, img, active):
         if active: self.lastInteraction = time.time()
         placeOver(img, self.bar, self.origPos)
@@ -135,3 +134,33 @@ class VerticalSliderVisualObject(VisualObject):
         self.positionO.setY(max(self.limitY[0], min(self.limitY[0]+(1-percent)*(self.limitY[1]-self.limitY[0]), self.limitY[1])))
     def getPercent(self):
         return 1-((self.positionO.getY() - self.limitY[0])/(abs(self.limitY[1]-self.limitY[0])))
+    
+
+class CameraVisualObject(VisualObject):
+    '''A custom button for enabling, disabling, and showing the estimates state of cameras.'''
+    def __init__(self, name, pos:tuple|list):
+        self.type = "camera button"
+        self.name = name
+        self.lastInteraction = time.time()
+
+        overlayText = displayText(str(name), "l", bold = True)
+
+        self.backRed = generateBorderBox((94,94), 3, (0,0,0,0), (100,0,0,175))
+        placeOver(self.backRed, overlayText, (50,50), True)
+
+        self.backGreen = generateBorderBox((94,94), 3, (0,0,0,0), (0,100,0,175))
+        placeOver(self.backGreen, overlayText, (50,50), True)
+
+        self.frameDisabled = generateBorderBox((94,94), 3, (150,150,150,255), (100,50,0,100))
+        placeOver(self.frameDisabled, overlayText, (50,50), True)
+
+        self.frameActive = generateBorderBox((94,94), 3, (254,221,16,255), (100,50,0,100))
+        placeOver(self.frameActive, overlayText, (50,50), True)
+        
+        self.positionO = RectangularPositionalBox((self.frameActive.width,self.frameActive.height), pos[0] - 50, pos[1] - 50)
+    def tick(self, img, active, estimates = False):
+        if active: self.lastInteraction = time.time()
+        placeOver(img, self.backGreen if estimates else self.backRed, self.positionO.getPosition(), False)
+        placeOver(img, self.frameActive if active else self.frameDisabled, self.positionO.getPosition(), False)
+    def updatePos(self, rmx, rmy):
+        pass
