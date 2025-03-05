@@ -105,7 +105,7 @@ class Interface:
         if self.interacting == -999 and self.mPressed and self.mRising:
             processed = False
             for id in self.ivos:
-                if self.ivos[id][1].getInteractable(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1]) and not(id in EXCLUDE):
+                if self.ivos[id][1].getInteractable(self.mx - SECTION_DATA[0][0], self.my - SECTION_DATA[0][1]) and not(id in EXCLUDE_IVOS):
                     self.interacting = id
                     processed = True
                     break
@@ -142,7 +142,7 @@ class Interface:
             self.lastElevatorPos = self.comms.getCurrentElevator()
             self.ivos[-29][1].setPercent(self.lastElevatorPos)
             self.needUpdate = True
-        if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
+        # if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
         if self.alliance != alliance:
@@ -165,15 +165,15 @@ class Interface:
     def process(self, im):
         img = im.copy()
 
-        placeOver(img, displayText(f"FPS: {self.fps}", "m"), (20,20))
+        placeOver(img, displayText("FPS: {}".format(self.fps), "m"), (20,20))
         # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
         # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
         # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
         # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
-        placeOver(img, displayText("Selected: {}{}".format(self.comms.selectedBranch, " " if self.comms.selectedLevel==0 else self.comms.selectedLevel), "m"), (20,55))
+        placeOver(img, displayText("Selected: {}{}".format(self.comms.selectedBranch, " " if self.comms.selectedLevel==-1 else self.comms.selectedLevel), "m"), (20,55))
         if not(COMMS):
-            placeOver(img, displayText("Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,160))
+            placeOver(img, displayText("Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,195))
 
         placeOver(img, displayText("Mode: {}".format(self.comms.mode), "m", colorTXT=(255,255,255,255)), (20,90))
         placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "m", colorTXT=(255,255,12,255)), (20,125))

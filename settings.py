@@ -3,10 +3,10 @@
 '''################################################################################################################################'''
 
 # Defines whether the robot is real or not. Determines connection method.
-REAL = False
+REAL = True
 
 # Changes the method of detection. When set to true, detects sudden mouse teleportation as a click.
-TOUCHSCREEN = False
+TOUCHSCREEN = True
 
 # Controls communications. Disabling this disables all the dashboard's NetworkTables functions.
 COMMS = True
@@ -37,7 +37,6 @@ hexColorToRGBA = lambda hexcolor: tuple(int(hexcolor[i:i+2], 16) for i in (1, 3,
 BACKGROUND_COLOR = "#000000" #Background color
 BACKGROUND_COLOR_RGBA = hexColorToRGBA(BACKGROUND_COLOR)
 
-EXCLUDE = [-29]
 
 import os
 from PIL import ImageFont
@@ -45,8 +44,9 @@ from subsystems.lib.simplefancy import *
 from subsystems.lib.render import *
 
 # Version
-VERSION = "v0.0.0"
+VERSION = "HVR (2025NYSU)"
 SYS_IVOS = [-999,-998,-997,-996]
+EXCLUDE_IVOS = [-29]
 
 
 # Fonts
