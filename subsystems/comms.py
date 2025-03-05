@@ -21,7 +21,8 @@ class Comms:
             instance = ntcore.NetworkTableInstance.getDefault()
             instance.startClient4(identity="Dashboard")
 
-            self.networkTable = instance.getTable(key="Dashboard")
+            self.dashboardNT = instance.getTable(key="Dashboard")
+            self.cameraNT = instance.getTable(key="Robot").getSubTable(key="vision")
 
             if REAL:
                 instance.setServerTeam(team=1155, port=5810)
@@ -30,51 +31,55 @@ class Comms:
                 instance.setServer(server_name="localhost")
 
             # Entry for the target branch to score on
-            self.entryTargetBranch = self.networkTable.getEntry(key="branch")
+            self.entryTargetBranch = self.dashboardNT.getEntry(key="branch")
             self.entryTargetBranch.setString(value="")
 
             # Entry for the target level to score on
-            self.entryTargetLevel = self.networkTable.getEntry(key="level")
+            self.entryTargetLevel = self.dashboardNT.getEntry(key="level")
             self.entryTargetLevel.setInteger(value=0)
 
             # Entry for whether to score processor or not
-            self.entryScoringProcessor = self.networkTable.getEntry(key="processor")
+            self.entryScoringProcessor = self.dashboardNT.getEntry(key="processor")
             self.entryScoringProcessor.setBoolean(value=False)
             
             # Entry for the target algae to obtain
-            self.entryTargetAlgae = self.networkTable.getEntry(key="algae")
+            self.entryTargetAlgae = self.dashboardNT.getEntry(key="algae")
             self.entryTargetAlgae.setInteger(value=-1)
 
             # Entry for the target elevator height
-            self.entryTargetElevator = self.networkTable.getEntry(key="targetElevator")
+            self.entryTargetElevator = self.dashboardNT.getEntry(key="targetElevator")
             self.entryTargetElevator.setDouble(value=0)
             
             # Entry for the current elevator height
-            self.entryCurrentElevator = self.networkTable.getEntry(key="currentElevator")
+            self.entryCurrentElevator = self.dashboardNT.getEntry(key="currentElevator")
             self.entryCurrentElevator.getDouble(defaultValue=0)
 
+            # Entry for the current cameras enabled
+            self.entryCameraEnabled = self.dashboardNT.getEntry(key="cameraEnabled")
+            self.entryCameraEnabled.getBooleanArray(defaultValue=[True, True, True, True])
+
             # Entry for the status of the connection
-            self.entryRobotTick = self.networkTable.getEntry(key="robotTick")
+            self.entryRobotTick = self.dashboardNT.getEntry(key="robotTick")
             self.entryRobotTick.setInteger(value=0)
             self.previousRobotTick = self.entryRobotTick.getInteger(defaultValue=0)
             self.lastRobotTickDetection = time.time()
 
             # Entry for new requests to the robot
-            self.entryRequest = self.networkTable.getEntry(key="request")
+            self.entryRequest = self.dashboardNT.getEntry(key="request")
             self.entryRequest.setString(value="")
 
             # Entry for the robot's alliance
-            self.entryBlueAlliance = self.networkTable.getEntry(key="blueAlliance")
+            self.entryBlueAlliance = self.dashboardNT.getEntry(key="blueAlliance")
             self.entryBlueAlliance.getBoolean(defaultValue="")
 
             # Entry for the current match
-            self.entryMatch = self.networkTable.getEntry(key="match")
+            self.entryMatch = self.dashboardNT.getEntry(key="match")
 
             # Entry for the current match time
-            self.entryMatchTime = self.networkTable.getEntry(key="matchTime")
+            self.entryMatchTime = self.dashboardNT.getEntry(key="matchTime")
 
             # Tracks update ticks
-            self.entryDashboardTick = self.networkTable.getEntry(key="dashboardTick")
+            self.entryDashboardTick = self.dashboardNT.getEntry(key="dashboardTick")
             self.entryDashboardTick.setInteger(value=0)
             self.dashboardTick = 0
 
@@ -88,7 +93,15 @@ class Comms:
         if COMMS: return self.entryCurrentElevator.getDouble(defaultValue=1.0)
         else: return 1.0
     
-    def getMatch(self) -> str:
+    def getCameraEnabled(self) -> bool:
+        if COMMS: return self.entryCameraEnabled.getBooleanArray(defaultValue=[False, False, False, False])
+        else: return [False, False, False, False]
+    
+    def getCameraEstimates(self, id) -> float:
+        if COMMS: return self.cameraNT.getEntry("estimates present " + str(id)).getBoolean(defaultValue=False)
+        else: return False
+
+    def getMatch(self) -> str:  
         if COMMS: return self.entryMatch.getString(defaultValue="@ None / M0")
         else: return "@ None / M0"
     

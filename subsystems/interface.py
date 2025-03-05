@@ -217,6 +217,8 @@ class Interface:
                     self.ivos[id][1].tick(img, self.interacting==id or self.comms.mode == "elevator")
                 elif id == -29:
                     self.ivos[id][1].tick(img, self.interacting==id)
+                elif -20 <= id <= -17:
+                    self.ivos[id][1].tick(img, self.interacting==id or self.comms.getCameraEnabled()[id+20], self.comms.getCameraEstimates(id+20))
                 else:
                     self.ivos[id][1].tick(img, self.interacting==id)
 
