@@ -145,16 +145,16 @@ class CameraVisualObject(VisualObject):
 
         overlayText = displayText(str(name), "l", bold = True)
 
-        self.backRed = generateBorderBox((94,94), 3, (0,0,0,0), (100,0,0,175))
+        self.backRed = generateBorderBox((94,94), 3, (0,0,0,0), (150,0,0,200))
         placeOver(self.backRed, overlayText, (50,50), True)
 
-        self.backGreen = generateBorderBox((94,94), 3, (0,0,0,0), (0,100,0,175))
+        self.backGreen = generateBorderBox((94,94), 3, (0,0,0,0), (0,150,0,200))
         placeOver(self.backGreen, overlayText, (50,50), True)
 
-        self.frameDisabled = generateBorderBox((94,94), 3, (150,150,150,255), (100,50,0,100))
+        self.frameDisabled = generateBorderBox((94,94), 3, (150,150,150,255), (0,0,0,0))
         placeOver(self.frameDisabled, overlayText, (50,50), True)
 
-        self.frameActive = generateBorderBox((94,94), 3, (254,221,16,255), (100,50,0,100))
+        self.frameActive = generateBorderBox((94,94), 3, (254,221,16,255), (0,0,0,0))
         placeOver(self.frameActive, overlayText, (50,50), True)
         
         self.positionO = RectangularPositionalBox((self.frameActive.width,self.frameActive.height), pos[0] - 50, pos[1] - 50)

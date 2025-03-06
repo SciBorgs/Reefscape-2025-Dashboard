@@ -38,13 +38,13 @@ class Interface:
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
-            -30 : ["a", VerticalSliderVisualObject("GO", (1375, 500), [round(865/2-200)-30,round(865/2+200)-30])],
-            -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 500), [round(865/2-200)-30,round(865/2+200)-30])],
+            -30 : ["a", VerticalSliderVisualObject("GO", (1375, 0), [round(865/2-200)+125,round(865/2+200)+125])],
+            -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 0), [round(865/2-200)+125,round(865/2+200)+125])],
 
-            -20 : ["a", CameraVisualObject("FL", (1410, 445))],
-            -19 : ["a", CameraVisualObject("FR", (1520, 445))],
-            -18 : ["a", CameraVisualObject("BL", (1410, 555))],
-            -17 : ["a", CameraVisualObject("BR", (1520, 555))],
+            -20 : ["a", CameraVisualObject("FL", (1410, 105))],
+            -19 : ["a", CameraVisualObject("FR", (1520, 105))],
+            -18 : ["a", CameraVisualObject("BL", (1410, 215))],
+            -17 : ["a", CameraVisualObject("BR", (1520, 215))],
         }
 
         for i in range(12):
@@ -75,6 +75,7 @@ class Interface:
         self.alliance = ""
         self.needUpdate = True
         self.lastElevatorPos = self.comms.getCurrentElevator()
+        self.lastCameraEstimates = None
         pass
 
     def tick(self,mx,my,mPressed,fps):
@@ -146,6 +147,10 @@ class Interface:
         if self.lastElevatorPos != self.comms.getCurrentElevator():
             self.lastElevatorPos = self.comms.getCurrentElevator()
             self.ivos[-29][1].setPercent(self.lastElevatorPos)
+            self.needUpdate = True
+        currentEstimates = [self.comms.getCameraEstimates(x) for x in range(4)]
+        if self.lastCameraEstimates != currentEstimates:
+            self.lastCameraEstimates = currentEstimates.copy()
             self.needUpdate = True
         # if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
