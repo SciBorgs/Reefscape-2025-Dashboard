@@ -67,6 +67,9 @@ class Comms:
             self.entryCameraBR = self.dashboardNT.getEntry(key="cameraBR")
             self.entryCameraBR.getBoolean(defaultValue=True)
 
+            self.entryCameraBM = self.dashboardNT.getEntry(key="cameraBM")
+            self.entryCameraBM.getBoolean(defaultValue=True)
+
             # Entry for the status of the connection
             self.entryRobotTick = self.dashboardNT.getEntry(key="robotTick")
             self.entryRobotTick.setInteger(value=0)
@@ -118,6 +121,8 @@ class Comms:
     def setCameraBR(self, state:bool) -> bool:
         if COMMS: self.entryCameraBR.setBoolean(value=state)
 
+    def setCameraBM(self, state:bool) -> bool:
+        if COMMS: self.entryCameraBM.setBoolean(value=state)
     
     def getCameraEstimates(self, id) -> float:
         if COMMS: return self.cameraNT.getEntry("estimates present " + str(id)).getBoolean(defaultValue=False)
