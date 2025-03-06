@@ -106,18 +106,18 @@ class Comms:
     #     if COMMS: return .getBooleanArray(defaultValue=[False, False, False, False])
     #     else: return [False, False, False, False]
 
-    def getCameraFL(self) -> bool:
-        if COMMS: return self.entryCameraFL.getBoolean(defaultValue=True)
-        else: return True
-    def getCameraFR(self) -> bool:
-        if COMMS: return self.entryCameraFR.getBoolean(defaultValue=True)
-        else: return True
-    def getCameraBL(self) -> bool:
-        if COMMS: return self.entryCameraBL.getBoolean(defaultValue=True)
-        else: return True
-    def getCameraBR(self) -> bool:
-        if COMMS: return self.entryCameraBR.getBoolean(defaultValue=True)
-        else: return True
+    def setCameraFL(self, state:bool) -> bool:
+        if COMMS: self.entryCameraFL.setBoolean(value=state)
+
+    def setCameraFR(self, state:bool) -> bool:
+        if COMMS: self.entryCameraFR.setBoolean(value=state)
+
+    def setCameraBL(self, state:bool) -> bool:
+        if COMMS: self.entryCameraBL.setBoolean(value=state)
+
+    def setCameraBR(self, state:bool) -> bool:
+        if COMMS: self.entryCameraBR.setBoolean(value=state)
+
     
     def getCameraEstimates(self, id) -> float:
         if COMMS: return self.cameraNT.getEntry("estimates present " + str(id)).getBoolean(defaultValue=False)

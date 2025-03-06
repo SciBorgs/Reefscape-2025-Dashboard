@@ -142,6 +142,8 @@ class CameraVisualObject(VisualObject):
         self.type = "camera button"
         self.name = name
         self.lastInteraction = time.time()
+        self.enabled = True
+        self.activeTime = 0
 
         overlayText = displayText(str(name), "l", bold = True)
 
@@ -158,9 +160,14 @@ class CameraVisualObject(VisualObject):
         placeOver(self.frameActive, overlayText, (50,50), True)
         
         self.positionO = RectangularPositionalBox((self.frameActive.width,self.frameActive.height), pos[0] - 50, pos[1] - 50)
-    def tick(self, img, active, estimates = False):
-        if active: self.lastInteraction = time.time()
+    def tick(self, img, active, estimates = False, enabled = False):
+        if active: 
+            self.lastInteraction = time.time()
+            self.activeTime += 1
+        else: self.activeTime = 0
+        if self.activeTime == 1:
+            self.enabled = not(self.enabled)
         placeOver(img, self.backGreen if estimates else self.backRed, self.positionO.getPosition(), False)
-        placeOver(img, self.frameActive if active else self.frameDisabled, self.positionO.getPosition(), False)
+        placeOver(img, self.frameActive if self.enabled or enabled else self.frameDisabled, self.positionO.getPosition(), False)
     def updatePos(self, rmx, rmy):
         pass

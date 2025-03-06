@@ -141,6 +141,10 @@ class Interface:
             elif self.interacting == -30:
                 self.comms.setElevator(self.ivos[-30][1].getPercent())
             else: pass
+        self.comms.setCameraFL(self.ivos[-20][1].enabled)
+        self.comms.setCameraFR(self.ivos[-19][1].enabled)
+        self.comms.setCameraBL(self.ivos[-18][1].enabled)
+        self.comms.setCameraBR(self.ivos[-17][1].enabled)
         if self.interacting == -30 or self.previousInteracting == -30:
             self.comms.setElevator(self.ivos[-30][1].getPercent())
             self.needUpdate = True
@@ -223,7 +227,7 @@ class Interface:
                 elif id == -29:
                     self.ivos[id][1].tick(img, self.interacting==id)
                 elif -20 <= id <= -17:
-                    self.ivos[id][1].tick(img, self.interacting==id or self.comms.getCameraEnabled()[id+20], self.comms.getCameraEstimates(id+20))
+                    self.ivos[id][1].tick(img, self.interacting==id, self.comms.getCameraEstimates(id+20), self.ivos[id][1].enabled)
                 else:
                     self.ivos[id][1].tick(img, self.interacting==id)
 
