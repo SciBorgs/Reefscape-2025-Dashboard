@@ -54,9 +54,21 @@ class Comms:
             self.entryCurrentElevator = self.dashboardNT.getEntry(key="currentElevator")
             self.entryCurrentElevator.getDouble(defaultValue=0)
 
-            # Entry for the current cameras enabled
-            self.entryCameraEnabled = self.dashboardNT.getEntry(key="cameraEnabled")
-            self.entryCameraEnabled.getBooleanArray(defaultValue=[True, True, True, True])
+            # Entry for each of the cameras and their enabled state
+            self.entryCameraFL = self.dashboardNT.getEntry(key="cameraFL")
+            self.entryCameraFL.getBoolean(defaultValue=True)
+
+            self.entryCameraFR = self.dashboardNT.getEntry(key="cameraFR")
+            self.entryCameraFR.getBoolean(defaultValue=True)
+
+            self.entryCameraBL = self.dashboardNT.getEntry(key="cameraBL")
+            self.entryCameraBL.getBoolean(defaultValue=True)
+
+            self.entryCameraBR = self.dashboardNT.getEntry(key="cameraBR")
+            self.entryCameraBR.getBoolean(defaultValue=True)
+
+            self.entryCameraBM = self.dashboardNT.getEntry(key="cameraBM")
+            self.entryCameraBM.getBoolean(defaultValue=True)
 
             # Entry for the status of the connection
             self.entryRobotTick = self.dashboardNT.getEntry(key="robotTick")
@@ -93,9 +105,24 @@ class Comms:
         if COMMS: return self.entryCurrentElevator.getDouble(defaultValue=1.0)
         else: return 1.0
     
-    def getCameraEnabled(self) -> bool:
-        if COMMS: return self.entryCameraEnabled.getBooleanArray(defaultValue=[False, False, False, False])
-        else: return [False, False, False, False]
+    # def getCameraFL(self) -> bool:
+    #     if COMMS: return .getBooleanArray(defaultValue=[False, False, False, False])
+    #     else: return [False, False, False, False]
+
+    def setCameraFL(self, state:bool) -> bool:
+        if COMMS: self.entryCameraFL.setBoolean(value=state)
+
+    def setCameraFR(self, state:bool) -> bool:
+        if COMMS: self.entryCameraFR.setBoolean(value=state)
+
+    def setCameraBL(self, state:bool) -> bool:
+        if COMMS: self.entryCameraBL.setBoolean(value=state)
+
+    def setCameraBR(self, state:bool) -> bool:
+        if COMMS: self.entryCameraBR.setBoolean(value=state)
+
+    def setCameraBM(self, state:bool) -> bool:
+        if COMMS: self.entryCameraBM.setBoolean(value=state)
     
     def getCameraEstimates(self, id) -> float:
         if COMMS: return self.cameraNT.getEntry("estimates present " + str(id)).getBoolean(defaultValue=False)
