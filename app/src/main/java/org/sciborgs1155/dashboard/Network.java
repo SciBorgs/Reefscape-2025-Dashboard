@@ -8,12 +8,16 @@ import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.opencv.core.Core;
+import org.sciborgs1155.dashboard.ReefMenu.BranchButton;
+import org.sciborgs1155.dashboard.ReefMenu.BranchButton.Branch;
 
 /** Class for communicating with WPILib's {@link NetworkTablesJNI}. */
 public class Network {
@@ -23,11 +27,11 @@ public class Network {
   /** The {@link NetworkTable} refrencing the 'Dashboard' table on the server. */
   private static NetworkTable dashboardTable;
 
-  // TODO: Named tasks.
-  /** An {@link ArrayList list} of tasks to run each tick(stored in {@link Stage} consumers). */
+  /** An {@link ArrayList} of tasks to run each tick(stored in {@link Stage} consumers). */
   private static ArrayList<Consumer<Stage>> stageTasks;
 
-  /** The {@link Runnable} to run every tick. */
+  /** The {@link Duration} inbetween network table updates. */
+  private static final Duration taskUpdateDelay = Duration.ofMillis(1000);
 
   /** Used in the {@link Network#connect()} method to refrence specific servers. */
   public enum Server {
@@ -93,11 +97,42 @@ public class Network {
     return (int) dashboardTable.getEntry("robotTick").getInteger(0);
   }
 
-  /** Starts a seperate thread for {@link Network} communications. */
+  /**
+   * Starts a seperate thread for {@link Network} communications.
+   *
+   * @param stage The stage that will be passed into the {@link #stageTasks}.
+   */
   public static void startNetworkThread(Stage stage) {
     stageTasks = new ArrayList<>();
 
-    //  Icon Switching.
+    addIconSwitching(stage);
+
+    final Thread taskThread =
+        new Thread(
+            () -> {
+              while (true) {
+                try {
+                  for (Consumer<Stage> task : stageTasks) {
+                    task.accept(stage);
+                  }
+
+                  Thread.sleep(taskUpdateDelay);
+                } catch (InterruptedException e) {
+                  System.err.println("Network Task Thread Canceled!");
+                }
+              }
+            },
+            "Network Task Thread");
+
+    Thread.startVirtualThread(taskThread);
+  }
+
+  /**
+   * Turns on icon switching depending on the connection status.
+   *
+   * @param stage The stage to control the icon switching of.
+   */
+  public static void addIconSwitching(Stage stage) {
     addStageTask(
         s -> {
           if (Network.isConnected()) {
@@ -140,37 +175,58 @@ public class Network {
             }
           }
 
-          // Suppressing VSCode warnings.
+          // This supresses VSCode unused warnings.
           s.getWidth();
         });
-
-    final Thread thread =
-        new Thread(
-            () -> {
-              while (true) {
-                try {
-                  for (Consumer<Stage> task : stageTasks) {
-                    task.accept(stage);
-                  }
-
-                  Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                  System.err.println("Network Thread Canceled!");
-                }
-              }
-            },
-            "Network Thread");
-
-    Thread.startVirtualThread(thread);
   }
 
-  /** Adds a task that runs periodically every tick. */
+  /**
+   * Adds a task that runs periodically every tick.
+   *
+   * @param task The task to run.
+   */
   public static void addStageTask(Consumer<Stage> task) {
     stageTasks.add(task);
   }
 
-  /** Removes a task that runs periodically every tick. */
+  /**
+   * Adds a task that runs periodically every tick whenever the listener returns true.
+   *
+   * @param task The task to run.
+   * @param listener Determines whether the task will run or not.
+   */
+  public static void addStageTask(Consumer<Stage> task, Supplier<Boolean> listener) {
+    stageTasks.add(
+        stage -> {
+          if (listener.get()) {
+            task.accept(stage);
+          }
+        });
+  }
+
+  /**
+   * Removes a task that runs periodically every tick.
+   *
+   * @param task The task to remove.
+   */
   public static void removeStageTask(Consumer<Stage> task) {
     stageTasks.remove(task);
+  }
+
+  /**
+   * Activates a specified Branch in the {@link #dashboardTable Dashboard Network Table}.
+   * 
+   * 
+   * @param branch The branch to activate.
+   */
+  public static void activateBranch(Branch branch) {
+    dashboardTable.getEntry("Branch").setString(BranchButton.branchToString.get(branch));
+  }
+
+  /**
+   * Deactivates the branch field in the {@link #dashboardTable Dashboard Network Table}.
+   */
+  public static void deactivateBranch() {
+    dashboardTable.getEntry("Branch").setString("");
   }
 }

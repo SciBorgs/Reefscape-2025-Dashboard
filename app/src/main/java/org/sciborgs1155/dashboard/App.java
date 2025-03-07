@@ -4,22 +4,32 @@
 package org.sciborgs1155.dashboard;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.sciborgs1155.dashboard.Network.Server;
+import org.sciborgs1155.dashboard.ReefMenu.ReefMenu;
 import org.sciborgs1155.dashboard.TitleBar.TitleBar;
 
 /** Main class for starting the app. */
 public class App extends Application {
+  /** The Title bar with 3 buttons. */
+  public static final TitleBar titleBar = new TitleBar("Main Title Bar");
+
+  /** A branch selection menu with 13 buttons. */
+  public static final ReefMenu reefMenu = new ReefMenu("The Reef Menu");
+
+  /** Contains every other {@link Pane} in the app. */
+  public static final BorderPane mainPane = new BorderPane();
+
+  /** A scene composed of the {@link #mainPane}. */
+  public static final Scene mainScene = new Scene(mainPane, 1280, 720);
+
   /** Starts the window(given as an {@link Stage}) */
   @Override
   public void start(Stage stage) {
@@ -27,8 +37,11 @@ public class App extends Application {
     stage.initStyle(StageStyle.UNDECORATED);
     stage.initStyle(StageStyle.TRANSPARENT);
 
-    stage.setWidth(1280);
-    stage.setHeight(720);
+    mainScene.setFill(Color.TRANSPARENT);
+    stage.setWidth(mainScene.getWidth());
+    stage.setHeight(mainScene.getHeight());
+    stage.setScene(mainScene);
+
     stage.setResizable(true);
 
     stage.setTitle("SciBoard 2025");
@@ -38,17 +51,14 @@ public class App extends Application {
             new Image(
                 ClassLoader.getSystemResourceAsStream("SciborgIcons/sciborgDisconnected.png")));
 
-    final BorderPane mainPane = new BorderPane();
-    mainPane.setBackground(
-        new Background(new BackgroundFill(Color.BLACK, new CornerRadii(18, false), Insets.EMPTY)));
+    mainPane.setBackground(Background.fill(Color.BLACK));
+    mainPane.setTop(titleBar);
+    mainPane.setCenter(reefMenu);
 
-    mainPane.setTop(new TitleBar(stage));
-    mainPane.setCenter(new Pane());
+    titleBar.bind(stage, mainPane);
+    reefMenu.bind(stage, titleBar, mainPane);
 
-    final Scene mainScene = new Scene(mainPane, 1280, 720);
-    mainScene.setFill(Color.TRANSPARENT);
-
-    stage.setScene(mainScene);
+    stage.setMaximized(true);
     stage.show();
 
     Network.load();
