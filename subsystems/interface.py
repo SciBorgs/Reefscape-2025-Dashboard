@@ -150,11 +150,15 @@ class Interface:
             elif self.interacting == -30:
                 self.comms.setElevator(self.ivos[-30][1].getPercent())
             else: pass
+
         self.comms.setCameraFL(self.ivos[-20][1].enabled)
         self.comms.setCameraFR(self.ivos[-19][1].enabled)
         self.comms.setCameraBL(self.ivos[-18][1].enabled)
         self.comms.setCameraBR(self.ivos[-17][1].enabled)
         self.comms.setCameraBM(self.ivos[-16][1].enabled)
+        self.comms.setBeambreakSCLInvert(self.ivos[-10][1].inverted)
+        self.comms.setBeambreakHPIInvert(self.ivos[-9][1].inverted)
+
         if self.interacting == -30 or self.previousInteracting == -30:
             self.comms.setElevator(self.ivos[-30][1].getPercent())
             self.needUpdate = True
@@ -225,20 +229,34 @@ class Interface:
         for id in self.ivos:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
+                    # REEF BRANCHES
                     self.ivos[id][1].tick(img, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.comms.selectedBranch))
                 elif 51 <= id <= 54:
+                    # REEF LEVELS
                     self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedLevel+50)
                 elif id == -49:
+                    # PROCESSOR
                     self.ivos[id][1].tick(img, self.interacting==id or self.comms.selectedProcessor)
                 elif 70 <= id <= 75:
+                    # REEF ALGAE
                     self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedAlgae+70)
                 elif id == -30:
+                    # MANUAL TARGET ELEVATOR
                     self.ivos[id][1].tick(img, self.interacting==id or self.comms.mode == "elevator")
                 elif id == -29:
+                    # MANUAL CURRENT ELEVATOR
                     self.ivos[id][1].tick(img, self.interacting==id)
                 elif -20 <= id <= -16:
+                    # CAMERAS
                     self.ivos[id][1].tick(img, self.interacting==id, self.comms.getCameraEstimates(id+20), self.ivos[id][1].enabled)
+                elif id == -10:
+                    # SCORAL BEAMBREAK
+                    self.ivos[id][1].tick(img, self.interacting==id, self.comms.getBeambreakSCL())
+                elif id == -9:
+                    # HOPPER BEAMBREAK
+                    self.ivos[id][1].tick(img, self.interacting==id, self.comms.getBeambreakHPI())
                 else:
+                    # UNKNOWN 
                     self.ivos[id][1].tick(img, self.interacting==id)
 
         return img    

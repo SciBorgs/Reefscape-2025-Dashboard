@@ -70,6 +70,17 @@ class Comms:
             self.entryCameraBM = self.dashboardNT.getEntry(key="cameraBM")
             self.entryCameraBM.getBoolean(defaultValue=True)
 
+            # Entry for each of our beambreaks
+            self.entryBeambreakSCLCurrent = instance.getTable("Robot/scoraling/scoral/beambreak").getEntry("get")
+            self.entryBeambreakSCLCurrent.getBoolean(defaultValue = True)
+            self.entryBeambreakSCLInvert = self.dashboardNT.getEntry("invertBeambreakSCL")
+            self.entryBeambreakSCLInvert.setBoolean(value=False)
+
+            self.entryBeambreakHPICurrent = instance.getTable("Robot/scoraling/hopper/beambreak").getEntry("get")
+            self.entryBeambreakHPICurrent.getBoolean(defaultValue = True)
+            self.entryBeambreakHPIInvert = self.dashboardNT.getEntry("invertBeambreakHPI")
+            self.entryBeambreakHPIInvert.setBoolean(value=False)
+
             # Entry for the status of the connection
             self.entryRobotTick = self.dashboardNT.getEntry(key="robotTick")
             self.entryRobotTick.setInteger(value=0)
@@ -127,6 +138,20 @@ class Comms:
     def getCameraEstimates(self, id) -> float:
         if COMMS: return self.cameraNT.getEntry("estimates present " + str(id)).getBoolean(defaultValue=False)
         else: return False
+    
+    def getBeambreakSCL(self) -> bool:
+        if COMMS: return self.entryBeambreakSCLCurrent.getBoolean(defaultValue=False)
+        else: return False
+
+    def getBeambreakHPI(self) -> bool:
+        if COMMS: return self.entryBeambreakHPICurrent.getBoolean(defaultValue=False)
+        else: return False
+    
+    def setBeambreakSCLInvert(self, invert) -> bool:
+        if COMMS: self.entryBeambreakSCLInvert.setBoolean(value=invert)
+
+    def setBeambreakHPIInvert(self, invert) -> bool:
+        if COMMS: self.entryBeambreakHPIInvert.setBoolean(value=invert)
 
     def getMatch(self) -> str:  
         if COMMS: return self.entryMatch.getString(defaultValue="@ None / M0")

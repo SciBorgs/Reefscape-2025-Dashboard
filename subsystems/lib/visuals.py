@@ -183,17 +183,17 @@ class BeambreakVisualObject(VisualObject):
 
         overlayText = displayText(str(name), "ml", bold = True)
 
-        self.overlayBroken = displayText("BKN", "m", bold = True)
-        self.overlayNotBroken = displayText("N/BKN", "m", bold = True)
+        self.overlayBroken = displayText("BKN", "m", bold = False)
+        self.overlayNotBroken = displayText("N/BKN", "m", bold = False)
 
-        self.frameInverted = generateBorderBox((94,94), 3, (150,150,150,255), (0,0,0,0))
+        self.frameInverted = generateBorderBox((94,94), 3, (255,0,0,255), (0,0,0,0))
         placeOver(self.frameInverted, overlayText, (50,50), True)
 
-        self.frameNormal = generateBorderBox((94,94), 3, (254,221,16,255), (0,0,0,0))
+        self.frameNormal = generateBorderBox((94,94), 3, (0,255,0,255), (0,0,0,0))
         placeOver(self.frameNormal, overlayText, (50,50), True)
         
         self.positionO = RectangularPositionalBox((self.frameNormal.width,self.frameNormal.height), pos[0] - 50, pos[1] - 50)
-    def tick(self, img, active, broken = False, status = False):
+    def tick(self, img, active, broken = False):
         if active: 
             self.lastInteraction = time.time()
             self.activeTime += 1
