@@ -29,23 +29,31 @@ class Interface:
         a - entire screen
         '''
         self.ivos = {
+            # IVO SYSTEM
             -999 : [" ", DummyVisualObject("dummy", (0,0))], # used for not interacting with anything
             -998 : [" ", DummyVisualObject("dummy", (0,0))], # used for text boxes
             -997 : [" ", DummyVisualObject("dummy", (0,0))], # used by keybinds
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
+            # DASHBOARD TOP CONTROL
             -51 : ["a", BranchButtonVisualObject("reset", (111, 865/2-110), "RS")],
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
+            # DASHBOARD MANUAL ELEVATOR
             -30 : ["a", VerticalSliderVisualObject("GO", (1375, 0), [round(865/2-200)+125,round(865/2+200)+125])],
             -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 0), [round(865/2-200)+125,round(865/2+200)+125])],
 
-            -20 : ["a", ToggleStatusVisualObject("FL", (1410, 105))],
-            -19 : ["a", ToggleStatusVisualObject("FR", (1520, 105))],
-            -18 : ["a", ToggleStatusVisualObject("BL", (1410, 215))],
-            -17 : ["a", ToggleStatusVisualObject("BR", (1520, 215))],
-            -16 : ["a", ToggleStatusVisualObject("BM", (1300, 160))],
+            # DASHBOARD CAMERAS
+            -20 : ["a", CameraVisualObject("FL", (1410, 105))],
+            -19 : ["a", CameraVisualObject("FR", (1520, 105))],
+            -18 : ["a", CameraVisualObject("BL", (1410, 215))],
+            -17 : ["a", CameraVisualObject("BR", (1520, 215))],
+            -16 : ["a", CameraVisualObject("BM", (1300, 160))],
+
+            # DASHBOARD BEAMBREAK STATUS
+            -10 : ["a", BeambreakVisualObject("SCL", (300, 215))],
+            - 9 : ["a", BeambreakVisualObject("HPI", (300, 105))],
         }
 
         for i in range(12):

@@ -53,6 +53,7 @@ EXCLUDE_IVOS = [-29]
 FONTS_ALL = ["Orbitron-VariableFont_wght.ttf"]
 FONT_PATH = os.path.join("resources", "fonts", FONTS_ALL[0])
 FONT_LARGE = ImageFont.truetype(FONT_PATH, 35)
+FONT_MEDIUM_LARGE = ImageFont.truetype(FONT_PATH, 24)
 FONT_MEDIUM = ImageFont.truetype(FONT_PATH, 15)
 FONT_SMALL_MEDIUM = ImageFont.truetype(FONT_PATH, 12)
 FONT_SMALL = ImageFont.truetype(FONT_PATH, 10)

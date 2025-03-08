@@ -136,10 +136,8 @@ class VerticalSliderVisualObject(VisualObject):
         return 1-((self.positionO.getY() - self.limitY[0])/(abs(self.limitY[1]-self.limitY[0])))
     
 
-class ToggleStatusVisualObject(VisualObject):
-    '''A custom button that allows for state switching, and displaying current state information about something.
-       - Enabling, disabling, and showing the estimates state of cameras.
-       - Inverting and showing a beambreak state.'''
+class CameraVisualObject(VisualObject):
+    '''A custom button for enabling, disabling, and showing the estimates state of cameras.'''
     def __init__(self, name, pos:tuple|list):
         self.type = "camera button"
         self.name = name
@@ -171,5 +169,38 @@ class ToggleStatusVisualObject(VisualObject):
             self.enabled = not(self.enabled)
         placeOver(img, self.backGreen if estimates else self.backRed, self.positionO.getPosition(), False)
         placeOver(img, self.frameActive if self.enabled or enabled else self.frameDisabled, self.positionO.getPosition(), False)
+    def updatePos(self, rmx, rmy):
+        pass
+
+class BeambreakVisualObject(VisualObject):
+    '''A custom button for inverted and showing the state of beambreaks. Ideally not used except for worst case.'''
+    def __init__(self, name, pos:tuple|list, invert = False):
+        self.type = "beambreak button"
+        self.name = name
+        self.lastInteraction = time.time()
+        self.inverted = invert
+        self.activeTime = 0
+
+        overlayText = displayText(str(name), "ml", bold = True)
+
+        self.overlayBroken = displayText("BKN", "m", bold = True)
+        self.overlayNotBroken = displayText("N/BKN", "m", bold = True)
+
+        self.frameInverted = generateBorderBox((94,94), 3, (150,150,150,255), (0,0,0,0))
+        placeOver(self.frameInverted, overlayText, (50,50), True)
+
+        self.frameNormal = generateBorderBox((94,94), 3, (254,221,16,255), (0,0,0,0))
+        placeOver(self.frameNormal, overlayText, (50,50), True)
+        
+        self.positionO = RectangularPositionalBox((self.frameNormal.width,self.frameNormal.height), pos[0] - 50, pos[1] - 50)
+    def tick(self, img, active, broken = False, status = False):
+        if active: 
+            self.lastInteraction = time.time()
+            self.activeTime += 1
+        else: self.activeTime = 0
+        if self.activeTime == 1:
+            self.inverted = not(self.inverted)
+        placeOver(img, self.overlayBroken if (not(broken) if self.inverted else broken) else self.overlayNotBroken, addP(self.positionO.getPosition(), (50, 80)), True)
+        placeOver(img, self.frameInverted if self.inverted else self.frameNormal, self.positionO.getPosition(), False)
     def updatePos(self, rmx, rmy):
         pass
