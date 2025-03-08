@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.sciborgs1155.dashboard.Network;
 import org.sciborgs1155.dashboard.Styles;
 
 import javafx.geometry.Pos;

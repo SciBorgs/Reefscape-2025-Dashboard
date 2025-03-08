@@ -13,17 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.sciborgs1155.dashboard.Network.Server;
-import org.sciborgs1155.dashboard.ReefMenu.ReefMenu;
-import org.sciborgs1155.dashboard.TitleBar.TitleBar;
 
 /** Main class for starting the app. */
 public class App extends Application {
-  /** The Title bar with 3 buttons. */
-  public static final TitleBar titleBar = new TitleBar("Main Title Bar");
-
-  /** A branch selection menu with 13 buttons. */
-  public static final ReefMenu reefMenu = new ReefMenu("The Reef Menu");
-
   /** Contains every other {@link Pane} in the app. */
   public static final BorderPane mainPane = new BorderPane();
 
@@ -52,11 +44,6 @@ public class App extends Application {
                 ClassLoader.getSystemResourceAsStream("SciborgIcons/sciborgDisconnected.png")));
 
     mainPane.setBackground(Background.fill(Color.BLACK));
-    mainPane.setTop(titleBar);
-    mainPane.setCenter(reefMenu);
-
-    titleBar.bind(stage, mainPane);
-    reefMenu.bind(stage, titleBar, mainPane);
 
     stage.setMaximized(true);
     stage.show();

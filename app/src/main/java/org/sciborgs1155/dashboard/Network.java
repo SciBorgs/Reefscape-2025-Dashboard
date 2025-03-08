@@ -1,6 +1,8 @@
 package org.sciborgs1155.dashboard;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CameraServerJNI;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.jni.WPIMathJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -77,6 +79,11 @@ public class Network {
     }
 
     dashboardTable = networkTables.getTable("Dashboard");
+
+    // Get the UsbCamera from CameraServer
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+    // Set the resolution
+    camera.setResolution(640, 480);
   }
 
   /** Checks to if the application is connected to NetworkTables. */
