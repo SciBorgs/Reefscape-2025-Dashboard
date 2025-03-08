@@ -41,11 +41,11 @@ class Interface:
             -30 : ["a", VerticalSliderVisualObject("GO", (1375, 0), [round(865/2-200)+125,round(865/2+200)+125])],
             -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 0), [round(865/2-200)+125,round(865/2+200)+125])],
 
-            -20 : ["a", CameraVisualObject("FL", (1410, 105))],
-            -19 : ["a", CameraVisualObject("FR", (1520, 105))],
-            -18 : ["a", CameraVisualObject("BL", (1410, 215))],
-            -17 : ["a", CameraVisualObject("BR", (1520, 215))],
-            -16 : ["a", CameraVisualObject("BM", (1300, 160))],
+            -20 : ["a", ToggleStatusVisualObject("FL", (1410, 105))],
+            -19 : ["a", ToggleStatusVisualObject("FR", (1520, 105))],
+            -18 : ["a", ToggleStatusVisualObject("BL", (1410, 215))],
+            -17 : ["a", ToggleStatusVisualObject("BR", (1520, 215))],
+            -16 : ["a", ToggleStatusVisualObject("BM", (1300, 160))],
         }
 
         for i in range(12):

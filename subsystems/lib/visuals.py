@@ -136,8 +136,10 @@ class VerticalSliderVisualObject(VisualObject):
         return 1-((self.positionO.getY() - self.limitY[0])/(abs(self.limitY[1]-self.limitY[0])))
     
 
-class CameraVisualObject(VisualObject):
-    '''A custom button for enabling, disabling, and showing the estimates state of cameras.'''
+class ToggleStatusVisualObject(VisualObject):
+    '''A custom button that allows for state switching, and displaying current state information about something.
+       - Enabling, disabling, and showing the estimates state of cameras.
+       - Inverting and showing a beambreak state.'''
     def __init__(self, name, pos:tuple|list):
         self.type = "camera button"
         self.name = name
