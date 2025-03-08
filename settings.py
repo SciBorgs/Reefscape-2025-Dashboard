@@ -3,7 +3,7 @@
 '''################################################################################################################################'''
 
 # Defines whether the robot is real or not. Determines connection method.
-REAL = False
+REAL = True
 
 # Changes the method of detection. When set to true, detects sudden mouse teleportation as a click.
 TOUCHSCREEN = True
