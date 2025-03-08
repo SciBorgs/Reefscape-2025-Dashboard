@@ -29,23 +29,31 @@ class Interface:
         a - entire screen
         '''
         self.ivos = {
+            # IVO SYSTEM
             -999 : [" ", DummyVisualObject("dummy", (0,0))], # used for not interacting with anything
             -998 : [" ", DummyVisualObject("dummy", (0,0))], # used for text boxes
             -997 : [" ", DummyVisualObject("dummy", (0,0))], # used by keybinds
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
+            # DASHBOARD TOP CONTROL
             -51 : ["a", BranchButtonVisualObject("reset", (111, 865/2-110), "RS")],
             -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
             -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
+            # DASHBOARD MANUAL ELEVATOR
             -30 : ["a", VerticalSliderVisualObject("GO", (1375, 0), [round(865/2-200)+125,round(865/2+200)+125])],
             -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 0), [round(865/2-200)+125,round(865/2+200)+125])],
 
+            # DASHBOARD CAMERAS
             -20 : ["a", CameraVisualObject("FL", (1410, 105))],
             -19 : ["a", CameraVisualObject("FR", (1520, 105))],
             -18 : ["a", CameraVisualObject("BL", (1410, 215))],
             -17 : ["a", CameraVisualObject("BR", (1520, 215))],
             -16 : ["a", CameraVisualObject("BM", (1300, 160))],
+
+            # DASHBOARD BEAMBREAK STATUS
+            -10 : ["a", BeambreakVisualObject("SCL", (300, 215))],
+            - 9 : ["a", BeambreakVisualObject("HPI", (300, 105))],
         }
 
         for i in range(12):
@@ -141,15 +149,11 @@ class Interface:
                 self.comms.setProcessor()
             elif self.interacting == -30:
                 self.comms.setElevator(self.ivos[-30][1].getPercent())
-            else: pass
-        self.comms.setCameraFL(self.ivos[-20][1].enabled)
-        self.comms.setCameraFR(self.ivos[-19][1].enabled)
-        self.comms.setCameraBL(self.ivos[-18][1].enabled)
-        self.comms.setCameraBR(self.ivos[-17][1].enabled)
-        self.comms.setCameraBM(self.ivos[-16][1].enabled)
+            self.needUpdate = True
         if self.interacting == -30 or self.previousInteracting == -30:
             self.comms.setElevator(self.ivos[-30][1].getPercent())
             self.needUpdate = True
+            
         if self.lastElevatorPos != self.comms.getCurrentElevator():
             self.lastElevatorPos = self.comms.getCurrentElevator()
             self.ivos[-29][1].setPercent(self.lastElevatorPos)
@@ -158,6 +162,15 @@ class Interface:
         if self.lastCameraEstimates != currentEstimates:
             self.lastCameraEstimates = currentEstimates.copy()
             self.needUpdate = True
+
+        if self.needUpdate:
+            self.comms.setCameraFL(self.ivos[-20][1].enabled)
+            self.comms.setCameraFR(self.ivos[-19][1].enabled)
+            self.comms.setCameraBL(self.ivos[-18][1].enabled)
+            self.comms.setCameraBR(self.ivos[-17][1].enabled)
+            self.comms.setCameraBM(self.ivos[-16][1].enabled)
+            self.comms.setBeambreakSCLInvert(self.ivos[-10][1].inverted)
+            self.comms.setBeambreakHPIInvert(self.ivos[-9][1].inverted)
         # if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
@@ -217,20 +230,34 @@ class Interface:
         for id in self.ivos:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
+                    # REEF BRANCHES
                     self.ivos[id][1].tick(img, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.comms.selectedBranch))
                 elif 51 <= id <= 54:
+                    # REEF LEVELS
                     self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedLevel+50)
                 elif id == -49:
+                    # PROCESSOR
                     self.ivos[id][1].tick(img, self.interacting==id or self.comms.selectedProcessor)
                 elif 70 <= id <= 75:
+                    # REEF ALGAE
                     self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedAlgae+70)
                 elif id == -30:
+                    # MANUAL TARGET ELEVATOR
                     self.ivos[id][1].tick(img, self.interacting==id or self.comms.mode == "elevator")
                 elif id == -29:
+                    # MANUAL CURRENT ELEVATOR
                     self.ivos[id][1].tick(img, self.interacting==id)
                 elif -20 <= id <= -16:
+                    # CAMERAS
                     self.ivos[id][1].tick(img, self.interacting==id, self.comms.getCameraEstimates(id+20), self.ivos[id][1].enabled)
+                elif id == -10:
+                    # SCORAL BEAMBREAK
+                    self.ivos[id][1].tick(img, self.interacting==id, self.comms.getBeambreakSCL())
+                elif id == -9:
+                    # HOPPER BEAMBREAK
+                    self.ivos[id][1].tick(img, self.interacting==id, self.comms.getBeambreakHPI())
                 else:
+                    # UNKNOWN 
                     self.ivos[id][1].tick(img, self.interacting==id)
 
         return img    

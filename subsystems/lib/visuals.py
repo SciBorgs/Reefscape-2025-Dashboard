@@ -171,3 +171,36 @@ class CameraVisualObject(VisualObject):
         placeOver(img, self.frameActive if self.enabled or enabled else self.frameDisabled, self.positionO.getPosition(), False)
     def updatePos(self, rmx, rmy):
         pass
+
+class BeambreakVisualObject(VisualObject):
+    '''A custom button for inverted and showing the state of beambreaks. Ideally not used except for worst case.'''
+    def __init__(self, name, pos:tuple|list, invert = False):
+        self.type = "beambreak button"
+        self.name = name
+        self.lastInteraction = time.time()
+        self.inverted = invert
+        self.activeTime = 0
+
+        overlayText = displayText(str(name), "ml", bold = True)
+
+        self.overlayBroken = displayText("BKN", "m", bold = False)
+        self.overlayNotBroken = displayText("N/BKN", "m", bold = False)
+
+        self.frameInverted = generateBorderBox((94,94), 3, (255,0,0,255), (0,0,0,0))
+        placeOver(self.frameInverted, overlayText, (50,50), True)
+
+        self.frameNormal = generateBorderBox((94,94), 3, (0,255,0,255), (0,0,0,0))
+        placeOver(self.frameNormal, overlayText, (50,50), True)
+        
+        self.positionO = RectangularPositionalBox((self.frameNormal.width,self.frameNormal.height), pos[0] - 50, pos[1] - 50)
+    def tick(self, img, active, broken = False):
+        if active: 
+            self.lastInteraction = time.time()
+            self.activeTime += 1
+        else: self.activeTime = 0
+        if self.activeTime == 1:
+            self.inverted = not(self.inverted)
+        placeOver(img, self.overlayBroken if (not(broken) if self.inverted else broken) else self.overlayNotBroken, addP(self.positionO.getPosition(), (50, 80)), True)
+        placeOver(img, self.frameInverted if self.inverted else self.frameNormal, self.positionO.getPosition(), False)
+    def updatePos(self, rmx, rmy):
+        pass
