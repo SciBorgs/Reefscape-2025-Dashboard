@@ -149,19 +149,11 @@ class Interface:
                 self.comms.setProcessor()
             elif self.interacting == -30:
                 self.comms.setElevator(self.ivos[-30][1].getPercent())
-            else: pass
-
-        self.comms.setCameraFL(self.ivos[-20][1].enabled)
-        self.comms.setCameraFR(self.ivos[-19][1].enabled)
-        self.comms.setCameraBL(self.ivos[-18][1].enabled)
-        self.comms.setCameraBR(self.ivos[-17][1].enabled)
-        self.comms.setCameraBM(self.ivos[-16][1].enabled)
-        self.comms.setBeambreakSCLInvert(self.ivos[-10][1].inverted)
-        self.comms.setBeambreakHPIInvert(self.ivos[-9][1].inverted)
-
+            self.needUpdate = True
         if self.interacting == -30 or self.previousInteracting == -30:
             self.comms.setElevator(self.ivos[-30][1].getPercent())
             self.needUpdate = True
+            
         if self.lastElevatorPos != self.comms.getCurrentElevator():
             self.lastElevatorPos = self.comms.getCurrentElevator()
             self.ivos[-29][1].setPercent(self.lastElevatorPos)
@@ -170,6 +162,15 @@ class Interface:
         if self.lastCameraEstimates != currentEstimates:
             self.lastCameraEstimates = currentEstimates.copy()
             self.needUpdate = True
+
+        if self.needUpdate:
+            self.comms.setCameraFL(self.ivos[-20][1].enabled)
+            self.comms.setCameraFR(self.ivos[-19][1].enabled)
+            self.comms.setCameraBL(self.ivos[-18][1].enabled)
+            self.comms.setCameraBR(self.ivos[-17][1].enabled)
+            self.comms.setCameraBM(self.ivos[-16][1].enabled)
+            self.comms.setBeambreakSCLInvert(self.ivos[-10][1].inverted)
+            self.comms.setBeambreakHPIInvert(self.ivos[-9][1].inverted)
         # if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
