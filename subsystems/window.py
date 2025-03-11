@@ -45,7 +45,7 @@ class Window:
         self.interface.tick(mx,my,self.mPressed, self.fps)
         self.mouseScroll = 0
 
-        if self.interface.needUpdate and INTERFACE_FPS < self.fps:
+        if self.interface.needUpdate and INTERFACE_FPS < self.fps or True:
             self.label.update(self.interface.process(self.blankConnected if self.interface.comms.getIsConnected() else self.blankDisconnected))
             self.interface.needUpdate = False
 

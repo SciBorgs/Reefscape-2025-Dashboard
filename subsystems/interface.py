@@ -36,9 +36,9 @@ class Interface:
             -996 : [" ", DummyVisualObject("dummy", (0,0))], # used by scrolling
 
             # DASHBOARD TOP CONTROL
-            -51 : ["a", BranchButtonVisualObject("reset", (111, 865/2-110), "RS")],
-            -50 : ["a", BranchButtonVisualObject("go", (111, 865/2), "GO")],
-            -49 : ["a", BranchButtonVisualObject("processor", (111, 865/2+110), "PS")],
+            -51 : ["a", LevelButtonVisualObject("reset", (111, 865/2-110), "RS")],
+            -50 : ["a", LevelButtonVisualObject("go", (111, 865/2), "GO")],
+            -49 : ["a", LevelButtonVisualObject("processor", (111, 865/2+110), "PS")],
 
             # DASHBOARD MANUAL ELEVATOR
             -30 : ["a", VerticalSliderVisualObject("GO", (1375, 0), [round(865/2-200)+125,round(865/2+200)+125])],
@@ -60,12 +60,12 @@ class Interface:
             id = "ABCDEFGHIJKL"[i]
             self.ivos[i] = ["a", BranchButtonVisualObject("Branch " + id, (round(math.cos(math.pi * i / 6 - 7 * math.pi /12) * 350) + 1500/2, round(math.sin(math.pi * i / 6 - 7 * math.pi /12) * -350) + 865/2), id)]
 
-        for i in range(1,4+1):
-            self.ivos[i+50] = ["a",BranchButtonVisualObject("Level " + str(i),(1809, (3-i-0.5)*(110)+865/2),"L" + str(i))]
+        for i in range(2,4+1):
+            self.ivos[i+50] = ["a",LevelButtonVisualObject("Level " + str(i),(1809, (3-i-0.5)*(110)+865/2),"L" + str(i))]
         
         algae = ["AB", "CD", "FE", "HG", "JI", "KL"]
         for i in range(6):
-            self.ivos[i+70] = ["a",BranchButtonVisualObject("Algae " + algae[i],(round(math.cos(math.pi * i / 3 - 6 * math.pi /12) * 145) + 1500/2, round(math.sin(math.pi * i / 3 - 6 * math.pi /12) * -145) + 865/2), algae[i])]
+            self.ivos[i+70] = ["a",LevelButtonVisualObject("Algae " + algae[i],(round(math.cos(math.pi * i / 3 - 6 * math.pi /12) * 145) + 1500/2, round(math.sin(math.pi * i / 3 - 6 * math.pi /12) * -145) + 865/2), algae[i])]
 
 
         '''Control'''
@@ -85,6 +85,8 @@ class Interface:
         self.needUpdate = True
         self.lastElevatorPos = self.comms.getCurrentElevator()
         self.lastCameraEstimates = None
+        self.enabledReef = [[True for i in range(12)] for ie in range(3)]
+        self.selectedLevel = 4
         pass
 
     def tick(self,mx,my,mPressed,fps):
@@ -134,10 +136,18 @@ class Interface:
         if self.mRising or self.interacting != self.previousInteracting or self.interacting != -999 or self.previousInteracting != -999:
             self.needUpdate = True
         if self.mRising:
+            print(self.enabledReef)
             if 0 <= self.interacting <= 11:
-                self.comms.setSelectedBranch("ABCDEFGHIJKL"[self.interacting])
-            elif 51 <= self.interacting <= 54:
-                self.comms.setSelectedLevel(self.interacting - 50)
+                print(f"level {self.selectedLevel-2} branch {self.interacting}")
+                print(self.ivos[self.interacting][1].enabled)
+                for i in range(12):
+                    self.enabledReef[self.selectedLevel-2][i] = self.ivos[i][1].enabled
+                self.needUpdate = True
+            elif 52 <= self.interacting <= 54:
+                self.selectedLevel = self.interacting - 50
+                for i in range(12):
+                    self.ivos[i][1].enabled = self.enabledReef[self.selectedLevel-2][i]
+                self.needUpdate = True
             elif 70 <= self.interacting <= 75:
                 self.comms.setSelectedAlgae(self.interacting - 70)
             elif self.interacting == -51:
@@ -177,7 +187,7 @@ class Interface:
         if self.alliance != alliance:
             for i in range(0,11+1):
                 self.ivos[i][1].setAlliance(alliance)
-            for i in range(51,54+1):
+            for i in range(52,54+1):
                 self.ivos[i][1].setAlliance(alliance)
             for i in range(70, 76):
                 self.ivos[i][1].setAlliance(alliance)
@@ -231,10 +241,10 @@ class Interface:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
                     # REEF BRANCHES
-                    self.ivos[id][1].tick(img, self.interacting==id or id=="ABCDEFGHIJKL ".find(self.comms.selectedBranch))
-                elif 51 <= id <= 54:
+                    self.ivos[id][1].tick(img, self.interacting==id)
+                elif 52 <= id <= 54:
                     # REEF LEVELS
-                    self.ivos[id][1].tick(img, self.interacting==id or id==self.comms.selectedLevel+50)
+                    self.ivos[id][1].tick(img, self.interacting==id or id==self.selectedLevel+50)
                 elif id == -49:
                     # PROCESSOR
                     self.ivos[id][1].tick(img, self.interacting==id or self.comms.selectedProcessor)
