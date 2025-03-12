@@ -3,7 +3,7 @@
 '''################################################################################################################################'''
 
 # Defines whether the robot is real or not. Determines connection method.
-REAL = True
+REAL = False
 
 # Changes the method of detection. When set to true, detects sudden mouse teleportation as a click.
 TOUCHSCREEN = True
@@ -54,6 +54,7 @@ FONTS_ALL = ["Orbitron-VariableFont_wght.ttf"]
 FONT_PATH = os.path.join("resources", "fonts", FONTS_ALL[0])
 FONT_LARGE = ImageFont.truetype(FONT_PATH, 35)
 FONT_MEDIUM_LARGE = ImageFont.truetype(FONT_PATH, 24)
+FONT_MEDIUM_MEDIUM_LARGE = ImageFont.truetype(FONT_PATH, 17)
 FONT_MEDIUM = ImageFont.truetype(FONT_PATH, 15)
 FONT_SMALL_MEDIUM = ImageFont.truetype(FONT_PATH, 12)
 FONT_SMALL = ImageFont.truetype(FONT_PATH, 10)

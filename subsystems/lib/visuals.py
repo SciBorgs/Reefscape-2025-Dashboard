@@ -66,15 +66,52 @@ class DummyVisualObject(VisualObject):
         pass
     def getInteractable(self,rmx,rmy):
         return False
-
+    
 class BranchButtonVisualObject(VisualObject):
     '''A custom button for branches.'''
     def __init__(self, name, pos:tuple|list, branch):
         self.type = "branch button"
         self.name = name
         self.lastInteraction = time.time()
+        self.enabled = True
+        self.activeTime = 0
 
         overlayText = displayText(str(branch), "l", bold = True)
+
+        self.imgDisconnected = generateBorderBox((94,94), 3, (0,0,0,0), (0,0,0,100))
+        placeOver(self.imgDisconnected, overlayText, (50, 50), True)
+
+        self.imgRed = generateBorderBox((94,94), 3, (0,0,0,0), (100,0,0,200))
+        placeOver(self.imgRed, overlayText, (50,50), True)
+
+        self.imgBlue = generateBorderBox((94,94), 3, (0,0,0,0), (0,0,100,200))
+        placeOver(self.imgBlue, overlayText, (50,50), True)
+
+        self.frameDisabled = generateBorderBox((94,94), 3, (150,150,150,255), (0,0,0,0))
+
+        self.frameActive = generateBorderBox((94,94), 3, (254,221,16,255), (0,0,0,0))
+
+        self.img = self.imgDisconnected
+        self.positionO = RectangularPositionalBox((self.frameActive.width,self.frameActive.height), pos[0] - 50, pos[1] - 50)
+    def tick(self, img):
+        placeOver(img, self.img, self.positionO.getPosition(), False)
+        placeOver(img, self.frameActive if self.enabled else self.frameDisabled, self.positionO.getPosition(), False)
+    def setAlliance(self, alliance):
+        if alliance == "blue": self.img = self.imgBlue
+        elif alliance == "red": self.img = self.imgRed
+        else: self.img = self.imgDisconnected
+    def updatePos(self, rmx, rmy):
+        pass
+
+
+class LevelButtonVisualObject(VisualObject):
+    '''A custom button for levels.'''
+    def __init__(self, name, pos:tuple|list, level):
+        self.type = "level button"
+        self.name = name
+        self.lastInteraction = time.time()
+
+        overlayText = displayText(str(level), "l", bold = True)
 
         self.imgDisconnected = generateBorderBox((94,94), 3, (50,50,50,255), (0,0,0,100))
         placeOver(self.imgDisconnected, overlayText, (50, 50), True)
