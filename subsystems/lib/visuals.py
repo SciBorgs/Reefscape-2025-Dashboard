@@ -81,10 +81,10 @@ class BranchButtonVisualObject(VisualObject):
         self.imgDisconnected = generateBorderBox((94,94), 3, (0,0,0,0), (0,0,0,100))
         placeOver(self.imgDisconnected, overlayText, (50, 50), True)
 
-        self.imgRed = generateBorderBox((94,94), 3, (0,0,0,0), (100,0,0,200))
+        self.imgRed = generateBorderBox((94,94), 3, (0,0,0,0), (100,0,0,100))
         placeOver(self.imgRed, overlayText, (50,50), True)
 
-        self.imgBlue = generateBorderBox((94,94), 3, (0,0,0,0), (0,0,100,200))
+        self.imgBlue = generateBorderBox((94,94), 3, (0,0,0,0), (0,0,100,100))
         placeOver(self.imgBlue, overlayText, (50,50), True)
 
         self.frameDisabled = generateBorderBox((94,94), 3, (150,150,150,255), (0,0,0,0))

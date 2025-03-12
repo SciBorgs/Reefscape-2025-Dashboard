@@ -181,10 +181,10 @@ class Comms:
         else: return False
     
     def setAvailableBranches(self, branch:str) -> None:
-        self.entryAvailableBranches.setString(branch)
+        if COMMS: self.entryAvailableBranches.setString(branch)
 
     def setSelectedLevel(self, level:int) -> None:
-        self.entryTargetLevel.setInteger(level)
+        if COMMS: self.entryTargetLevel.setInteger(level)
     
     def setProcessor(self) -> None:
         self.selectedProcessor = not(self.selectedProcessor)
