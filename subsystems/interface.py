@@ -136,12 +136,10 @@ class Interface:
         if self.mRising or self.interacting != self.previousInteracting or self.interacting != -999 or self.previousInteracting != -999:
             self.needUpdate = True
         if self.mRising:
-            print(self.enabledReef)
             if 0 <= self.interacting <= 11:
-                print(f"level {self.selectedLevel-2} branch {self.interacting}")
-                print(self.ivos[self.interacting][1].enabled)
-                for i in range(12):
-                    self.enabledReef[self.selectedLevel-2][i] = self.ivos[i][1].enabled
+                self.ivos[self.interacting][1].enabled = not(self.ivos[self.interacting][1].enabled)
+                self.enabledReef[self.selectedLevel-2][self.interacting] = self.ivos[self.interacting][1].enabled
+                # print(f"level {self.selectedLevel-2} branch {self.interacting} set to {self.ivos[self.interacting][1].enabled}")
                 self.needUpdate = True
             elif 52 <= self.interacting <= 54:
                 self.selectedLevel = self.interacting - 50
@@ -241,7 +239,7 @@ class Interface:
             if self.ivos[id][0] == "a":
                 if 0 <= id <= 11:
                     # REEF BRANCHES
-                    self.ivos[id][1].tick(img, self.interacting==id)
+                    self.ivos[id][1].tick(img)
                 elif 52 <= id <= 54:
                     # REEF LEVELS
                     self.ivos[id][1].tick(img, self.interacting==id or id==self.selectedLevel+50)

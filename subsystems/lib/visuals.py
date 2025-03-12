@@ -93,13 +93,7 @@ class BranchButtonVisualObject(VisualObject):
 
         self.img = self.imgDisconnected
         self.positionO = RectangularPositionalBox((self.frameActive.width,self.frameActive.height), pos[0] - 50, pos[1] - 50)
-    def tick(self, img, active):
-        if active: 
-            self.lastInteraction = time.time()
-            self.activeTime += 1
-        else: self.activeTime = 0
-        if self.activeTime == 1:
-            self.enabled = not(self.enabled)
+    def tick(self, img):
         placeOver(img, self.img, self.positionO.getPosition(), False)
         placeOver(img, self.frameActive if self.enabled else self.frameDisabled, self.positionO.getPosition(), False)
     def setAlliance(self, alliance):
