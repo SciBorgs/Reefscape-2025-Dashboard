@@ -13,7 +13,6 @@ class Comms:
     def __init__(self) -> None:
         # Selected stuff
         self.mode = None
-        self.selectedBranch = " "
         self.selectedLevel = -1
         self.selectedAlgae = -1
         self.selectedProcessor = False
@@ -30,13 +29,13 @@ class Comms:
             else:
                 instance.setServer(server_name="localhost")
 
-            # Entry for the target branch to score on
-            self.entryTargetBranch = self.dashboardNT.getEntry(key="branch")
-            self.entryTargetBranch.setString(value="")
+            # Entry for the available branches to score on
+            self.entryAvailableBranches = self.dashboardNT.getEntry(key="availableBranches")
+            self.entryAvailableBranches.setString(value="ABCDEFGHIJKL")
 
             # Entry for the target level to score on
             self.entryTargetLevel = self.dashboardNT.getEntry(key="level")
-            self.entryTargetLevel.setInteger(value=0)
+            self.entryTargetLevel.setInteger(value=4)
 
             # Entry for whether to score processor or not
             self.entryScoringProcessor = self.dashboardNT.getEntry(key="processor")
@@ -70,16 +69,16 @@ class Comms:
             self.entryCameraBM = self.dashboardNT.getEntry(key="cameraBM")
             self.entryCameraBM.getBoolean(defaultValue=True)
 
-            # Entry for each of our beambreaks
-            self.entryBeambreakSCLCurrent = instance.getTable("Robot/scoraling/scoral/beambreak").getEntry("get")
-            self.entryBeambreakSCLCurrent.getBoolean(defaultValue = True)
-            self.entryBeambreakSCLInvert = self.dashboardNT.getEntry("invertBeambreakSCL")
-            self.entryBeambreakSCLInvert.setBoolean(value=False)
+            # # Entry for each of our beambreaks
+            # self.entryBeambreakSCLCurrent = instance.getTable("Robot/scoraling/scoral/beambreak").getEntry("get")
+            # self.entryBeambreakSCLCurrent.getBoolean(defaultValue = True)
+            # self.entryBeambreakSCLInvert = self.dashboardNT.getEntry("invertBeambreakSCL")
+            # self.entryBeambreakSCLInvert.setBoolean(value=False)
 
-            self.entryBeambreakHPICurrent = instance.getTable("Robot/scoraling/hopper/beambreak").getEntry("get")
-            self.entryBeambreakHPICurrent.getBoolean(defaultValue = True)
-            self.entryBeambreakHPIInvert = self.dashboardNT.getEntry("invertBeambreakHPI")
-            self.entryBeambreakHPIInvert.setBoolean(value=False)
+            # self.entryBeambreakHPICurrent = instance.getTable("Robot/scoraling/hopper/beambreak").getEntry("get")
+            # self.entryBeambreakHPICurrent.getBoolean(defaultValue = True)
+            # self.entryBeambreakHPIInvert = self.dashboardNT.getEntry("invertBeambreakHPI")
+            # self.entryBeambreakHPIInvert.setBoolean(value=False)
 
             # Entry for the status of the connection
             self.entryRobotTick = self.dashboardNT.getEntry(key="robotTick")
@@ -115,10 +114,6 @@ class Comms:
     def getCurrentElevator(self) -> float:
         if COMMS: return self.entryCurrentElevator.getDouble(defaultValue=1.0)
         else: return 1.0
-    
-    # def getCameraFL(self) -> bool:
-    #     if COMMS: return .getBooleanArray(defaultValue=[False, False, False, False])
-    #     else: return [False, False, False, False]
 
     def setCameraFL(self, state:bool) -> bool:
         if COMMS: self.entryCameraFL.setBoolean(value=state)
@@ -139,19 +134,19 @@ class Comms:
         if COMMS: return self.cameraNT.getEntry("estimates present " + str(id)).getBoolean(defaultValue=False)
         else: return False
     
-    def getBeambreakSCL(self) -> bool:
-        if COMMS: return self.entryBeambreakSCLCurrent.getBoolean(defaultValue=False)
-        else: return False
+    # def getBeambreakSCL(self) -> bool:
+    #     if COMMS: return self.entryBeambreakSCLCurrent.getBoolean(defaultValue=False)
+    #     else: return False
 
-    def getBeambreakHPI(self) -> bool:
-        if COMMS: return self.entryBeambreakHPICurrent.getBoolean(defaultValue=False)
-        else: return False
+    # def getBeambreakHPI(self) -> bool:
+    #     if COMMS: return self.entryBeambreakHPICurrent.getBoolean(defaultValue=False)
+    #     else: return False
     
-    def setBeambreakSCLInvert(self, invert) -> bool:
-        if COMMS: self.entryBeambreakSCLInvert.setBoolean(value=invert)
+    # def setBeambreakSCLInvert(self, invert) -> bool:
+    #     if COMMS: self.entryBeambreakSCLInvert.setBoolean(value=invert)
 
-    def setBeambreakHPIInvert(self, invert) -> bool:
-        if COMMS: self.entryBeambreakHPIInvert.setBoolean(value=invert)
+    # def setBeambreakHPIInvert(self, invert) -> bool:
+    #     if COMMS: self.entryBeambreakHPIInvert.setBoolean(value=invert)
 
     def getMatch(self) -> str:  
         if COMMS: return self.entryMatch.getString(defaultValue="@ None / M0")
@@ -185,44 +180,24 @@ class Comms:
         if COMMS: return self.entryBlueAlliance.getBoolean(defaultValue=True)
         else: return False
     
-    def setSelectedBranch(self, branch:str) -> None:
-        if self.selectedBranch != branch:
-            self.selectedBranch = branch
-        else:
-            self.selectedBranch = " "
-        self.selectedAlgae = -1
-        self.selectedProcessor = False
-        self.selectedElevator = 0
-        self.mode = "reef"
+    def setAvailableBranches(self, branch:str) -> None:
+        self.entryAvailableBranches.setString(branch)
 
     def setSelectedLevel(self, level:int) -> None:
-        if self.selectedLevel != level:
-            self.selectedLevel = level
-        else:
-            self.selectedLevel = -1
-        self.selectedAlgae = -1
-        self.selectedProcessor = False
-        self.selectedElevator = 0
-        self.mode = "reef"
+        self.entryTargetLevel.setInteger(level)
     
     def setProcessor(self) -> None:
         self.selectedProcessor = not(self.selectedProcessor)
-        self.selectedBranch = " "
-        self.selectedLevel = 0
         self.selectedAlgae = -1
         self.selectedElevator = 0
         self.mode = "processor"
     
     def setSelectedAlgae(self, algae:int) -> None:
-        self.selectedBranch = " "
-        self.selectedLevel = 0
         self.selectedAlgae = algae
         self.selectedElevator = 0
         self.mode = "algae"
 
     def setElevator(self, elevator:float) -> None:
-        self.selectedBranch = " "
-        self.selectedLevel = 0
         self.selectedAlgae = -1
         self.selectedElevator = elevator
         self.mode = "elevator"
@@ -239,19 +214,7 @@ class Comms:
 
     def transmit(self) -> None:
         if COMMS:
-            if self.mode == "reef":
-                if self.selectedBranch != " " and self.selectedLevel != -1:
-                    self.entryTargetBranch.setString(value=self.selectedBranch)
-                    self.entryTargetLevel.setInteger(value=self.selectedLevel)
-                    self.entryScoringProcessor.setBoolean(value=False)
-                    self.entryTargetAlgae.setInteger(value=-1)
-                    self.entryTargetElevator.setDouble(value=0)
-                    self.transmitRequest("reef")
-                    self.lastNewRequest = time.time()
-                    self.resetDashboard()
-            elif self.mode == "processor":
-                self.entryTargetBranch.setString(value=" ")
-                self.entryTargetLevel.setInteger(value=-1)
+            if self.mode == "processor":
                 self.entryScoringProcessor.setBoolean(value=True)
                 self.entryTargetAlgae.setInteger(value=-1)
                 self.entryTargetElevator.setDouble(value=0)
@@ -259,8 +222,6 @@ class Comms:
                 self.lastNewRequest = time.time()
                 self.resetDashboard()
             elif self.mode == "algae":
-                self.entryTargetBranch.setString(value=" ")
-                self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=False)
                 self.entryTargetAlgae.setInteger(value=self.selectedAlgae)
                 self.entryTargetElevator.setDouble(value=0)
@@ -268,8 +229,6 @@ class Comms:
                 self.lastNewRequest = time.time()
                 self.resetDashboard()
             elif self.mode == "elevator":
-                self.entryTargetBranch.setString(value=" ")
-                self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=False)
                 self.entryTargetAlgae.setInteger(value=-1)
                 self.entryTargetElevator.setDouble(value=self.selectedElevator)
@@ -277,8 +236,6 @@ class Comms:
                 self.lastNewRequest = time.time()
                 self.resetDashboard()
             elif self.mode == "reset":
-                self.entryTargetBranch.setString(value=" ")
-                self.entryTargetLevel.setInteger(value=-1)
                 self.entryScoringProcessor.setBoolean(value=False)
                 self.entryTargetAlgae.setInteger(value=-1)
                 self.entryRequest.setString(value="")
@@ -287,8 +244,6 @@ class Comms:
             else: pass
     
     def resetDashboard(self) -> None:
-        self.selectedBranch = " "
-        self.selectedLevel = -1
         self.selectedAlgae = -1
         self.selectedProcessor = False
         self.mode = None

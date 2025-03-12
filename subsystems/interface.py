@@ -52,8 +52,8 @@ class Interface:
             -16 : ["a", CameraVisualObject("BM", (1300, 160))],
 
             # DASHBOARD BEAMBREAK STATUS
-            -10 : ["a", BeambreakVisualObject("SCL", (300, 215))],
-            - 9 : ["a", BeambreakVisualObject("HPI", (300, 105))],
+            # -10 : ["a", BeambreakVisualObject("SCL", (300, 215))],
+            # - 9 : ["a", BeambreakVisualObject("HPI", (300, 105))],
         }
 
         for i in range(12):
@@ -139,12 +139,15 @@ class Interface:
             if 0 <= self.interacting <= 11:
                 self.ivos[self.interacting][1].enabled = not(self.ivos[self.interacting][1].enabled)
                 self.enabledReef[self.selectedLevel-2][self.interacting] = self.ivos[self.interacting][1].enabled
+                self.comms.setAvailableBranches("".join([("ABCDEFGHIJKL"[i] if self.ivos[i][1].enabled else " ") for i in range(12)]))
                 # print(f"level {self.selectedLevel-2} branch {self.interacting} set to {self.ivos[self.interacting][1].enabled}")
                 self.needUpdate = True
             elif 52 <= self.interacting <= 54:
                 self.selectedLevel = self.interacting - 50
                 for i in range(12):
                     self.ivos[i][1].enabled = self.enabledReef[self.selectedLevel-2][i]
+                self.comms.setAvailableBranches("".join([("ABCDEFGHIJKL"[i] if self.ivos[i][1].enabled else " ") for i in range(12)]))
+                self.comms.setSelectedLevel(self.interacting - 50)
                 self.needUpdate = True
             elif 70 <= self.interacting <= 75:
                 self.comms.setSelectedAlgae(self.interacting - 70)
@@ -177,8 +180,8 @@ class Interface:
             self.comms.setCameraBL(self.ivos[-18][1].enabled)
             self.comms.setCameraBR(self.ivos[-17][1].enabled)
             self.comms.setCameraBM(self.ivos[-16][1].enabled)
-            self.comms.setBeambreakSCLInvert(self.ivos[-10][1].inverted)
-            self.comms.setBeambreakHPIInvert(self.ivos[-9][1].inverted)
+            # self.comms.setBeambreakSCLInvert(self.ivos[-10][1].inverted)
+            # self.comms.setBeambreakHPIInvert(self.ivos[-9][1].inverted)
         # if self.comms.mode != "elevator": self.ivos[-30][1].setPercent(self.lastElevatorPos)
 
         alliance = ("blue" if self.comms.getBlueAlliance() else "red") if self.comms.getIsConnected() else "disconnected"
@@ -208,13 +211,12 @@ class Interface:
         # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
         # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
-        placeOver(img, displayText("Selected: {}{}".format(self.comms.selectedBranch, " " if self.comms.selectedLevel==-1 else self.comms.selectedLevel), "m"), (20,55))
         if not(COMMS):
-            placeOver(img, displayText("Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,195))
+            placeOver(img, displayText("Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,160))
 
-        placeOver(img, displayText("Mode: {}".format(self.comms.mode), "m", colorTXT=(255,255,255,255)), (20,90))
-        placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "m", colorTXT=(255,255,12,255)), (20,125))
-        placeOver(img, displayText("Time Left: {} s".format(round(self.comms.getMatchTime()*10)/10), "m", colorTXT=(255,255,12,255)), (20,160))
+        placeOver(img, displayText("Mode: {}".format(self.comms.mode), "m", colorTXT=(255,255,255,255)), (20,55))
+        placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "m", colorTXT=(255,255,12,255)), (20,90))
+        placeOver(img, displayText("Time Left: {} s".format(round(self.comms.getMatchTime()*10)/10), "m", colorTXT=(255,255,12,255)), (20,125))
 
         connected = self.comms.getIsConnected()
         placeOver(img, displayText("Comms: Connected: {}".format(connected), "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,750))
