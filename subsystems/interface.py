@@ -45,11 +45,11 @@ class Interface:
             -29 : ["a", VerticalSliderVisualObject("NOW", (1505, 0), [round(865/2-200)+125,round(865/2+200)+125])],
 
             # DASHBOARD CAMERAS
-            -20 : ["a", CameraVisualObject("FL", (1410, 105))],
-            -19 : ["a", CameraVisualObject("FR", (1520, 105))],
-            -18 : ["a", CameraVisualObject("BL", (1410, 215))],
-            -17 : ["a", CameraVisualObject("BR", (1520, 215))],
-            -16 : ["a", CameraVisualObject("BM", (1300, 160))],
+            -20 : ["a", CameraVisualObject("FL", (1464, 105))],
+            -19 : ["a", CameraVisualObject("FR", (1574, 105))],
+            -18 : ["a", CameraVisualObject("BL", (1464, 215))],
+            -17 : ["a", CameraVisualObject("BR", (1574, 215))],
+            -16 : ["a", CameraVisualObject("BM", (1354, 160))],
 
             # DASHBOARD BEAMBREAK STATUS
             # -10 : ["a", BeambreakVisualObject("SCL", (300, 215))],
@@ -205,29 +205,27 @@ class Interface:
     def process(self, im):
         img = im.copy()
 
-        placeOver(img, displayText("FPS: {}".format(self.fps), "m"), (20,20))
+        placeOver(img, displayText("FPS: {}".format(self.fps), "mml"), (20,20))
         # placeOver(img, displayText(f"Interacting With: {self.interacting}", "m"), (20,55))
         # placeOver(img, displayText(f"length of IVO: {len(self.ivos)}", "m"), (20,90))
         # placeOver(img, displayText(f"Mouse Pos: ({self.mx}, {self.my})", "m"), (200,20))
         # placeOver(img, displayText(f"Mouse Press: {self.mPressed}", "m", colorTXT=(100,255,100,255) if self.mPressed else (255,100,100,255)), (200,55))
 
         if not(COMMS):
-            placeOver(img, displayText("Comms has been disabled!", "m", colorTXT=(255,100,100,255)), (20,160))
+            placeOver(img, displayText("Comms has been disabled!", "mml", colorTXT=(255,100,100,255)), (20,160))
 
-        placeOver(img, displayText("Mode: {}".format(self.comms.mode), "m", colorTXT=(255,255,255,255)), (20,55))
-        placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "m", colorTXT=(255,255,12,255)), (20,90))
-        placeOver(img, displayText("Time Left: {} s".format(round(self.comms.getMatchTime()*10)/10), "m", colorTXT=(255,255,12,255)), (20,125))
+        placeOver(img, displayText("Mode: {}".format(self.comms.mode), "mml", colorTXT=(255,255,255,255)), (20,55))
+        placeOver(img, displayText("FRC 1155 {}".format(self.comms.getMatch()), "mml", colorTXT=(255,255,12,255)), (20,90))
+        placeOver(img, displayText("Time Left: {} s".format(round(self.comms.getMatchTime()*10)/10), "mml", colorTXT=(255,255,12,255)), (20,125))
 
         connected = self.comms.getIsConnected()
-        placeOver(img, displayText("Comms: Connected: {}".format(connected), "m", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,750))
+        placeOver(img, displayText("Comms: Connected: {}".format(connected), "mml", colorTXT=(100,255,100,255) if connected else (255,100,100,255)), (20,750))
         if connected:
-            placeOver(img, displayText("Comms: Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "m", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,800))
-            placeOver(img, displayText("Comms: Request: {}".format(self.comms.getRequest() if self.comms.getRequest()!="" else "Idle"), "m", colorTXT=(100,255,100,255) if self.comms.getRequest()!="" else (100,100,100,255)), (20,825))
-            
+            placeOver(img, displayText("Comms: Alliance: {}".format("Blue" if self.comms.getBlueAlliance() else "Red"), "mml", colorTXT=(100,100,255,255) if self.comms.getBlueAlliance() else (255,100,100,255)), (20,785))
+            placeOver(img, displayText("Comms: Request: {}".format(self.comms.getRequest() if self.comms.getRequest()!="" else "Idle"), "mml", colorTXT=(100,255,100,255) if self.comms.getRequest()!="" else (100,100,100,255)), (20,820))
         else:
-            placeOver(img, displayText("Comms: Alliance: Disconnected", "m", colorTXT=(100,100,100,255)), (20,775))
-            placeOver(img, displayText("Comms: Nearest: Disconnected", "m", colorTXT=(100,100,100,255)), (20,800))
-            placeOver(img, displayText("Comms: Request: Disconnected", "m", colorTXT=(100,100,100,255)), (20,825))
+            placeOver(img, displayText("Comms: Alliance: Disconnected", "mml", colorTXT=(100,100,100,255)), (20,785))
+            placeOver(img, displayText("Comms: Request: Disconnected", "mml", colorTXT=(100,100,100,255)), (20,820))
 
         if self.alliance in STIMULATION:
             subway = getFrameFromGIF(SUBWAY_GIF, time.time()*16)

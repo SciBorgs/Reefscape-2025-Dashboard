@@ -1,7 +1,7 @@
 '''This file contains functions related to fancy rendering'''
 
 from PIL import Image, ImageDraw
-from settings import FONT_SMALL, FONT_SMALL_MEDIUM, FONT_MEDIUM, FONT_LARGE, FONT_MEDIUM_LARGE
+from settings import FONT_SMALL, FONT_SMALL_MEDIUM, FONT_MEDIUM, FONT_LARGE, FONT_MEDIUM_LARGE, FONT_MEDIUM_MEDIUM_LARGE
 from subsystems.lib.simplefancy import *
 
 def displayText(text: str, size, colorBG:tuple|list = (0,0,0,0), colorTXT:tuple|list = (255,255,255,255), bold = False):
@@ -14,6 +14,8 @@ def displayText(text: str, size, colorBG:tuple|list = (0,0,0,0), colorTXT:tuple|
         font = FONT_SMALL_MEDIUM
     elif size == "ml":
         font = FONT_MEDIUM_LARGE
+    elif size == "mml":
+        font = FONT_MEDIUM_MEDIUM_LARGE
     else: 
         font = FONT_LARGE
     fsize = font.font.getsize(str(text))
